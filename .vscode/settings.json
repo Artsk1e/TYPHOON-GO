@@ -1,0 +1,8 @@
+{
+  "html.validate.styles": false,
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "js/ts.implicitProjectConfig.checkJs": false,
+  "pylance.warnings": false
+}
