@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Typhoon GO</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+
+  <!-- ============================================================ -->
+  <!--  WRAPPER — constrains to phone-sized viewport                -->
+  <!-- ============================================================ -->
+  <div id="app-wrapper">
+
+    <!-- ========================================================== -->
+    <!-- PAGE 1 — LOGIN                                             -->
+    <!-- ========================================================== -->
+    <div id="page-login" class="page active">
+
+      <!-- Red wave header -->
+      <header class="login-header">
+        <div class="login-logo">
+          <span class="logo-typhoon">TYPHOON</span>
+          <span class="logo-go">GO</span>
+        </div>
+        <div class="wave-container">
+          <svg viewBox="0 0 375 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,40 C60,80 120,0 190,40 C260,80 320,10 375,35 L375,0 L0,0 Z" fill="#FF2323"/>
+            <path d="M0,55 C70,100 140,15 210,55 C280,95 340,25 375,50 L375,0 L0,0 Z" fill="#FF4444" opacity="0.45"/>
+          </svg>
+        </div>
+      </header>
+
+      <!-- Login form body -->
+      <main class="login-body">
+        <h1 class="page-title">Login</h1>
+        <p class="page-subtitle">Sign in to continue.</p>
+
+        <div class="form-group">
+          <label class="field-label" for="login-email">EMAIL</label>
+          <input class="field-input" id="login-email" type="email" placeholder="******" />
+        </div>
+
+        <div class="form-group">
+          <label class="field-label" for="login-password">PASSWORD</label>
+          <input class="field-input" id="login-password" type="password" placeholder="******" />
+        </div>
+
+        <button id="btn-login" class="btn-primary">Log in</button>
+
+        <a id="link-forgot" class="text-link" href="#">Forgot Password?</a>
+
+        <button id="btn-create-account" class="btn-outline">Create New Account</button>
+      </main>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- PAGE 1B — FORGOT PASSWORD                                  -->
+    <!-- ========================================================== -->
+    <div id="page-forgot" class="page">
+      <header class="inner-header">
+        <button class="btn-back" data-target="page-login">&#8592;</button>
+        <div class="header-logo">
+          <span class="logo-typhoon-sm">TYPHOON</span>
+          <span class="logo-go-sm">GO</span>
+        </div>
+        <div class="header-spacer"></div>
+      </header>
+      <div class="inner-divider"></div>
+
+      <main class="inner-body">
+        <h1 class="page-title">Forgot Password</h1>
+        <p class="page-subtitle">Enter your email to reset your password.</p>
+
+        <div class="form-group">
+          <label class="field-label" for="forgot-email">EMAIL</label>
+          <input class="field-input" id="forgot-email" type="email" placeholder="Enter your email" />
+        </div>
+
+        <div class="form-group">
+          <label class="field-label" for="forgot-new-pass">NEW PASSWORD</label>
+          <input class="field-input" id="forgot-new-pass" type="password" placeholder="New password" />
+        </div>
+
+        <div class="form-group">
+          <label class="field-label" for="forgot-confirm-pass">CONFIRM PASSWORD</label>
+          <input class="field-input" id="forgot-confirm-pass" type="password" placeholder="Confirm password" />
+        </div>
+
+        <button id="btn-reset-password" class="btn-primary">Reset Password</button>
+        <a id="link-back-login-forgot" class="text-link" href="#">Back to Login</a>
+      </main>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- PAGE 2 — REGISTRATION                                      -->
+    <!-- ========================================================== -->
+    <div id="page-register" class="page">
+      <header class="inner-header">
+        <button class="btn-back" data-target="page-login">&#8592;</button>
+        <div class="header-logo">
+          <span class="logo-typhoon-sm">TYPHOON</span>
+          <span class="logo-go-sm">GO</span>
+        </div>
+        <div class="header-spacer"></div>
+      </header>
+      <div class="inner-divider"></div>
+
+      <main class="inner-body">
+        <h1 class="page-title">Sign Up</h1>
+        <a id="link-already-signed" class="text-link underline" href="#">Already Signed up? Log in here.</a>
+
+        <div class="form-group">
+          <label class="field-label" for="reg-email">EMAIL</label>
+          <input class="field-input" id="reg-email" type="email" placeholder="" />
+        </div>
+
+        <div class="form-group">
+          <label class="field-label" for="reg-password">PASSWORD</label>
+          <input class="field-input" id="reg-password" type="password" placeholder="" />
+        </div>
+
+        <div class="form-group">
+          <label class="field-label" for="reg-firstname">FIRST NAME</label>
+          <input class="field-input" id="reg-firstname" type="text" placeholder="" />
+        </div>
+
+        <div class="form-group">
+          <label class="field-label" for="reg-lastname">LAST NAME</label>
+          <input class="field-input" id="reg-lastname" type="text" placeholder="" />
+        </div>
+
+        <div class="form-group">
+          <label class="field-label" for="reg-phone">PHONE NUMBER</label>
+          <input class="field-input" id="reg-phone" type="tel" placeholder="" />
+        </div>
+
+        <div class="form-group">
+          <label class="field-label" for="reg-address">ADDRESS</label>
+          <input class="field-input" id="reg-address" type="text" placeholder="" />
+        </div>
+
+        <button id="btn-register-submit" class="btn-primary">Submit</button>
+      </main>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- PAGE 3 — DASHBOARD                                         -->
+    <!-- ========================================================== -->
+    <div id="page-dashboard" class="page has-navbar">
+      <header class="dash-header">
+        <button class="btn-hamburger" id="btn-hamburger">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="header-logo">
+          <span class="logo-typhoon-sm">TYPHOON</span>
+          <span class="logo-go-sm">GO</span>
+        </div>
+        <div class="avatar-circle">A</div>
+      </header>
+      <div class="inner-divider"></div>
+
+      <main class="dash-body">
+        <!-- SOS Rescue Big Button -->
+        <button id="btn-sos-rescue" class="sos-rescue-btn">
+          <span class="sos-text">SOS</span>
+          <span class="rescue-text">RESCUE</span>
+        </button>
+
+        <!-- Three action cards -->
+        <div class="action-cards">
+          <button id="btn-evac-centers" class="action-card">
+            <span class="action-icon">🏠</span>
+            <span class="action-label">Evacuation<br />Centers</span>
+          </button>
+          <button id="btn-safe-routes" class="action-card">
+            <span class="action-icon">📍</span>
+            <span class="action-label">Safe Routes</span>
+          </button>
+          <button id="btn-emergency-updates" class="action-card">
+            <span class="action-icon">🚨</span>
+            <span class="action-label">Emergency<br />Updates</span>
+          </button>
+        </div>
+      </main>
+
+      <!-- Global Navbar -->
+      <nav class="global-navbar" id="global-navbar-dashboard">
+        <button class="nav-btn" id="nav-map-dash">
+          <span class="nav-icon">📍</span>
+          <span class="nav-label">Map</span>
+        </button>
+        <button class="nav-phone-btn" id="nav-phone-dash">
+          <span class="nav-phone-icon">📞</span>
+        </button>
+        <button class="nav-btn" id="nav-notif-dash">
+          <span class="nav-icon">((·))</span>
+          <span class="nav-label">Notification</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- PAGE 4 — SOS RESCUE (Tap to Send SOS)                     -->
+    <!-- ========================================================== -->
+    <div id="page-sos" class="page has-navbar">
+      <header class="inner-header">
+        <button class="btn-back" data-target="page-dashboard">&#8592;</button>
+        <div class="header-logo">
+          <span class="logo-typhoon-sm">TYPHOON</span>
+          <span class="logo-go-sm">GO</span>
+        </div>
+        <div class="avatar-circle">A</div>
+      </header>
+      <div class="inner-divider"></div>
+
+      <main class="sos-body">
+        <!-- Leaflet Map Container -->
+        <div class="sos-map-bg" id="map-container-sos"></div>
+        
+        <!-- Semi-transparent overlay -->
+        <div class="sos-map-overlay"></div>
+
+        <!-- Big red SOS circle -->
+        <button id="btn-tap-sos" class="sos-circle-outer">
+          <div class="sos-circle-inner">
+            <!-- Tap hand icon from Font Awesome -->
+            <i class="fas fa-hand-paper tap-icon"></i>
+          </div>
+        </button>
+
+        <!-- SOS Button Label -->
+        <div class="sos-button-label">TAP TO SEND SOS</div>
+        
+        <!-- Label & Checkboxes below map -->
+        <div class="sos-form-area">
+          <h2 class="sos-tap-label">TAP TO SEND SOS</h2>
+
+          <div class="checkbox-group" id="sos-checkboxes">
+            <label class="custom-checkbox">
+              <input type="checkbox" id="chk-children" name="sos-option" value="children" />
+              <span class="checkmark"></span>
+              <span class="chk-label">With Children</span>
+            </label>
+            <label class="custom-checkbox">
+              <input type="checkbox" id="chk-elderly" name="sos-option" value="elderly" />
+              <span class="checkmark"></span>
+              <span class="chk-label">With Elderly</span>
+            </label>
+            <label class="custom-checkbox">
+              <input type="checkbox" id="chk-medical" name="sos-option" value="medical" />
+              <span class="checkmark"></span>
+              <span class="chk-label">Need Medical Assistance</span>
+            </label>
+          </div>
+        </div>
+      </main>
+
+      <nav class="global-navbar">
+        <button class="nav-btn" data-target="page-safe-routes">
+          <span class="nav-icon">📍</span>
+          <span class="nav-label">Map</span>
+        </button>
+        <button class="nav-phone-btn">
+          <span class="nav-phone-icon">📞</span>
+        </button>
+        <button class="nav-btn" data-target="page-emergency-updates">
+          <span class="nav-icon">((·))</span>
+          <span class="nav-label">Notification</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- PAGE 5 — SOS FORM (After tapping SOS)                     -->
+    <!-- ========================================================== -->
+    <div id="page-sos-form" class="page has-navbar">
+      <header class="inner-header">
+        <button class="btn-back" data-target="page-sos">&#8592;</button>
+        <div class="header-logo-red">
+          <span class="logo-typhoon-sm">SOS</span>
+          <span class="logo-go-sm">RESCUE</span>
+        </div>
+        <div class="avatar-circle">A</div>
+      </header>
+      <div class="inner-divider"></div>
+
+      <main class="inner-body">
+
+        <div class="sos-form-field">
+          <p class="sos-field-label">Name:</p>
+          <input class="sos-field-input" id="form-name" type="text" placeholder="e.g., Trisha Nicole Jacuba" />
+          <div class="field-underline"></div>
+        </div>
+
+        <div class="sos-form-field">
+          <p class="sos-field-label">Phone Number:</p>
+          <input class="sos-field-input" id="form-phone" type="tel" placeholder="0905 925 2860" />
+          <div class="field-underline"></div>
+        </div>
+
+        <div class="sos-form-field">
+          <p class="sos-field-label">Address:</p>
+          <input class="sos-field-input" id="form-address" type="text" placeholder="e.g, Andres Bonifacio Ave, Tibanga, Iligan City" />
+          <div class="field-underline"></div>
+        </div>
+
+        <!-- Mirror checkboxes from SOS page -->
+        <div class="checkbox-group form-checkboxes" id="form-checkboxes-display">
+          <label class="custom-checkbox">
+            <input type="checkbox" id="form-chk-children" name="form-option" value="children" />
+            <span class="checkmark"></span>
+            <span class="chk-label">With Children</span>
+          </label>
+          <label class="custom-checkbox">
+            <input type="checkbox" id="form-chk-elderly" name="form-option" value="elderly" checked/>
+            <span class="checkmark"></span>
+            <span class="chk-label">With Elderly</span>
+          </label>
+          <label class="custom-checkbox">
+            <input type="checkbox" id="form-chk-medical" name="form-option" value="medical" />
+            <span class="checkmark"></span>
+            <span class="chk-label">Need Medical Assistance.</span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="form-description" class="form-input" placeholder="Describe your situation or needs (optional)"></textarea>
+        </div>
+
+        <button id="btn-location" class="btn-location" data-target="page-sos-submitted">
+          <span class="location-btn-text">LOCATION</span>
+        </button>
+
+      </main>
+
+      <nav class="global-navbar">
+        <button class="nav-btn" data-target="page-safe-routes">
+          <span class="nav-icon">📍</span>
+          <span class="nav-label">Map</span>
+        </button>
+        <button class="nav-phone-btn">
+          <span class="nav-phone-icon">📞</span>
+        </button>
+        <button class="nav-btn" data-target="page-emergency-updates">
+          <span class="nav-icon">((·))</span>
+          <span class="nav-label">Notification</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- PAGE 5B - SOS SUBMITTED (After pressing Location button)  -->
+    <!-- ========================================================== -->
+    <div id="page-sos-submitted" class="page has-navbar">
+      <header class="inner-header">
+        <div class="header-logo-red">
+          <span class="logo-typhoon-sm">SOS</span>
+          <span class="logo-go-sm">RESCUE</span>
+        </div>
+        <div class="avatar-circle">A</div>
+      </header>
+      <div class="inner-divider"></div>
+
+      <main class="sos-submitted-body">
+        <!-- Leaflet Map Container -->
+        <div class="sos-submitted-map" id="map-container-sos-submitted"></div>
+
+        <!-- Success Message -->
+        <div class="sos-success-message">
+          <p>SOS Received.</p>
+          <p>Help is on the way.</p>
+        </div>
+
+        <!-- Back to Dashboard Button -->
+        <button class="btn-back-dashboard" data-target="page-dashboard">
+          Back to Dashboard
+        </button>
+      </main>
+
+      <nav class="global-navbar">
+        <button class="nav-btn" data-target="page-safe-routes">
+          <span class="nav-icon">📍</span>
+          <span class="nav-label">Map</span>
+        </button>
+        <button class="nav-phone-btn">
+          <span class="nav-phone-icon">📞</span>
+        </button>
+        <button class="nav-btn" data-target="page-emergency-updates">
+          <span class="nav-icon">((·))</span>
+          <span class="nav-label">Notification</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- PAGE 7 — EVACUATION CENTERS                               -->
+    <!-- ========================================================== -->
+    <div id="page-evac-centers" class="page has-navbar">
+      <header class="inner-header">
+        <button class="btn-back" data-target="page-dashboard">&#8592;</button>
+        <div class="header-logo-mixed">
+          <span class="logo-typhoon-sm">Evacuation</span>
+          <span class="logo-go-sm">Centers</span>
+        </div>
+        <div class="avatar-circle">A</div>
+      </header>
+      <div class="inner-divider"></div>
+
+      <main class="inner-body">
+        <div class="search-bar-wrap">
+          <span class="search-icon">🔍</span>
+          <input class="search-input" id="evac-search" type="text" placeholder="Search" />
+        </div>
+
+        <!-- Evacuation Center Cards -->
+        <div class="evac-card open" id="evac-card-1">
+          <div class="evac-card-top">
+            <h3 class="evac-name">MSU-IIT Gymnasium</h3>
+            <p class="evac-desc">Evacuation Center</p>
+          </div>
+          <div class="evac-card-bottom">
+            <div class="evac-status open-status">
+              <span class="status-dot green"></span>
+              <span class="status-text">Open</span>
+            </div>
+            <span class="evac-capacity">Capacity: 100+</span>
+          </div>
+        </div>
+
+        <div class="evac-card partial" id="evac-card-2">
+          <div class="evac-card-top">
+            <h3 class="evac-name">Barangay Hall</h3>
+            <p class="evac-desc">Purok Adelfa</p>
+          </div>
+          <div class="evac-card-bottom">
+            <div class="evac-status partial-status">
+              <span class="status-dot orange"></span>
+              <span class="status-text">80% Full</span>
+            </div>
+            <span class="evac-capacity">Capacity: 50</span>
+          </div>
+        </div>
+
+        <div class="evac-card full" id="evac-card-3">
+          <div class="evac-card-top">
+            <h3 class="evac-name">Kabacsanan Gym</h3>
+            <p class="evac-desc">Zone 1</p>
+          </div>
+          <div class="evac-card-bottom">
+            <div class="evac-status full-status">
+              <span class="status-dot red"></span>
+              <span class="status-text">Full</span>
+            </div>
+            <span class="evac-capacity">Capacity: 200</span>
+          </div>
+        </div>
+      </main>
+
+      <nav class="global-navbar">
+        <button class="nav-btn" data-target="page-safe-routes">
+          <span class="nav-icon">📍</span>
+          <span class="nav-label">Location</span>
+        </button>
+        <button class="nav-phone-btn">
+          <span class="nav-phone-icon">📞</span>
+        </button>
+        <button class="nav-btn" data-target="page-emergency-updates">
+          <span class="nav-icon">((·))</span>
+          <span class="nav-label">Notification</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- PAGE 8/9 — SAFE ROUTES                                    -->
+    <!-- ========================================================== -->
+    <div id="page-safe-routes" class="page has-navbar">
+      <header class="inner-header">
+        <button class="btn-back" data-target="page-dashboard">&#8592;</button>
+        <div class="header-logo-mixed">
+          <span class="logo-typhoon-sm">Safest</span>
+          <span class="logo-go-sm">Route</span>
+        </div>
+        <div class="avatar-circle">A</div>
+      </header>
+      <div class="inner-divider"></div>
+
+      <main class="safe-routes-body">
+        <!-- Leaflet Map Container -->
+        <div class="map-placeholder" id="map-container"></div>
+
+        <!-- Route Legend -->
+        <div class="route-cards-wrap">
+          <div class="route-card safe-route" id="route1-card">
+            <div class="route-card-left">
+              <div class="route-icon safe-icon">
+                <svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="10" fill="#2ECC40"/><path d="M8 12 L11 15 L16 9" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <span class="route-name">Route 1</span>
+            </div>
+            <span class="route-status safe-label">✓ Safe</span>
+          </div>
+
+          <div class="route-card flooded-route" id="route2-card">
+            <div class="route-card-left">
+              <div class="route-icon flooded-icon">
+                <svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="10" fill="#FF2323"/><path d="M8 8 L16 16 M16 8 L8 16" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>
+              </div>
+              <span class="route-name">Route 2</span>
+            </div>
+            <span class="route-status flooded-label">✕ Flooded</span>
+          </div>
+
+          <!-- Destination dropdown (Page 8 state: collapsed, Page 9: expanded) -->
+          <div class="destination-card" id="destination-card">
+            <div class="destination-header" id="destination-toggle">
+              <div class="dest-pin-wrap">
+                <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#FF2323"/><circle cx="12" cy="9" r="2.5" fill="white"/></svg>
+              </div>
+              <div class="dest-text">
+                <p class="dest-name">MSU-IIT Gymnasium</p>
+                <p class="dest-address">Tibanga, Iligan City, Lanao Del Norte, Nort....</p>
+              </div>
+              <span class="dest-chevron" id="dest-chevron">▼</span>
+            </div>
+
+            <!-- Expanded dropdown (hidden by default) -->
+            <div class="destination-dropdown" id="destination-dropdown" style="display:none;">
+              <div class="dest-option">
+                <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#FF2323"/></svg>
+                <span>Baranggay Hall Purok Adelfa</span>
+              </div>
+              <div class="dest-option">
+                <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#FF2323"/></svg>
+                <span>Kabaksanan Gymnasium</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Travel info (shown after destination selected) -->
+          <div class="travel-info-card" id="travel-info-card" style="display:none;">
+            <div class="travel-option">
+              <div class="travel-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#666" stroke-width="2">
+                  <path d="M13 4a2 2 0 0 1 0 4H5a2 2 0 0 1 0-4h8zm-4 8c0 2.21-1.79 4-4 4S1 14.21 1 12s1.79-4 4-4 4 1.79 4 4zm10 0c0 2.21-1.79 4-4 4s-4-1.79-4-4 1.79-4 4-4 4 1.79 4 4z"/>
+                  <circle cx="5" cy="12" r="1.5" fill="#666"/>
+                  <circle cx="19" cy="12" r="1.5" fill="#666"/>
+                  <path d="M5 8V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="travel-details">
+                <p class="travel-mode">Walk · 1.5km</p>
+                <p class="travel-sub">10 mins · MSU-IIT Gymnasim</p>
+              </div>
+            </div>
+            <div class="travel-option">
+              <div class="travel-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#666" stroke-width="2">
+                  <rect x="2" y="8" width="20" height="10" rx="2"/>
+                  <path d="M6 18v2M18 18v2M2 12h20M6 8V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2"/>
+                  <circle cx="7" cy="17" r="1" fill="#666"/>
+                  <circle cx="17" cy="17" r="1" fill="#666"/>
+                </svg>
+              </div>
+              <div class="travel-details">
+                <p class="travel-mode">Vehicle · 1.5km</p>
+                <p class="travel-sub">5 mins · MSU-IIT Gymnasim</p>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- end route-cards-wrap -->
+      </main>
+
+      <nav class="global-navbar">
+        <button class="nav-btn nav-active" data-target="page-safe-routes">
+          <span class="nav-icon">📍</span>
+          <span class="nav-label">Map</span>
+        </button>
+        <button class="nav-phone-btn">
+          <span class="nav-phone-icon">📞</span>
+        </button>
+        <button class="nav-btn" data-target="page-emergency-updates">
+          <span class="nav-icon">((·))</span>
+          <span class="nav-label">Notification</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- PAGE 10 — EMERGENCY UPDATES                               -->
+    <!-- ========================================================== -->
+    <div id="page-emergency-updates" class="page has-navbar">
+      <header class="inner-header">
+        <button class="btn-back" data-target="page-dashboard">&#8592;</button>
+        <div class="header-logo-mixed">
+          <span class="logo-typhoon-sm">Emergency</span>
+          <span class="logo-go-sm">Updates</span>
+        </div>
+        <div class="avatar-circle">A</div>
+      </header>
+      <div class="inner-divider"></div>
+
+      <main class="inner-body">
+        <div class="search-bar-wrap">
+          <span class="search-icon">🔍</span>
+          <input class="search-input" id="alert-search" type="text" placeholder="Search" />
+        </div>
+
+        <!-- Alert cards -->
+        <div class="alert-card" id="alert-1">
+          <div class="alert-card-header">
+            <div class="alert-title-wrap">
+              <span class="alert-dot"></span>
+              <span class="alert-title-text">Alert</span>
+            </div>
+            <span class="alert-time">1 min ago</span>
+          </div>
+          <p class="alert-body">(3:45 PM): Floodwater in Purok 3 now knee-deep. Residents advised to prepare for possible evacuation....</p>
+        </div>
+
+        <div class="alert-card" id="alert-2">
+          <div class="alert-card-header">
+            <div class="alert-title-wrap">
+              <span class="alert-dot"></span>
+              <span class="alert-title-text">Alert</span>
+            </div>
+            <span class="alert-time">24 mins ago</span>
+          </div>
+          <p class="alert-body">(4:10 PM): Water level rising near Riverside Area. Please move vehicles to higher ground....</p>
+        </div>
+
+        <div class="alert-card" id="alert-3">
+          <div class="alert-card-header">
+            <div class="alert-title-wrap">
+              <span class="alert-dot"></span>
+              <span class="alert-title-text">Alert</span>
+            </div>
+            <span class="alert-time">30 mins ago</span>
+          </div>
+          <p class="alert-body">Evacuation ongoing in Purok 5. Proceed to Barangay Covered Court immediately....</p>
+        </div>
+      </main>
+
+      <nav class="global-navbar">
+        <button class="nav-btn" data-target="page-safe-routes">
+          <span class="nav-icon">📍</span>
+          <span class="nav-label">Location</span>
+        </button>
+        <button class="nav-phone-btn">
+          <span class="nav-phone-icon">📞</span>
+        </button>
+        <button class="nav-btn nav-active" data-target="page-emergency-updates">
+          <span class="nav-icon">((·))</span>
+          <span class="nav-label">Notification</span>
+        </button>
+      </nav>
+    </div>
+
+  </div><!-- end #app-wrapper -->
+
+  <script src="script.js"></script>
+</body>
+</html>
