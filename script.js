@@ -182,10 +182,11 @@ const carousel = document.getElementById('featured-carousel');
 const carouselDots = document.querySelectorAll('.carousel-dot');
 
 function showSlide(index) {
-  const slides = document.querySelectorAll('.carousel-slide');
+  const slides = document.querySelectorAll('.carousel-slide:not(.carousel-slide-btn)');
 
-  // Update slide position
-  carousel.style.transform = `translateX(-${index * 100}%)`;
+  // Update slide position using scrollLeft
+  const slideWidth = carousel.clientWidth;
+  carousel.scrollLeft = index * slideWidth;
 
   // Update dots
   carouselDots.forEach((dot, i) => {
@@ -194,6 +195,26 @@ function showSlide(index) {
 
   currentSlide = index;
 }
+
+// Handle carousel slide button navigation (click to go to page)
+document.querySelectorAll('.carousel-slide-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = btn.getAttribute('data-target');
+    if (target) {
+      navigateTo(target);
+    }
+  });
+});
+
+// Handle image load errors
+document.querySelectorAll('.carousel-img').forEach((img, index) => {
+  img.onerror = function() {
+    console.warn(`Carousel image ${index} failed to load: ${this.src}`);
+    this.parentElement.style.background = 'linear-gradient(135deg, #ddd 0%, #999 100%)';
+    this.style.display = 'none';
+  };
+});
 
 // Add click listeners to carousel dots
 carouselDots.forEach(dot => {

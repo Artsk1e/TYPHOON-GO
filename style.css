@@ -70,6 +70,8 @@ html, body {
 .page {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
   display: none;
   flex-direction: column;
   background: var(--white);
@@ -344,8 +346,8 @@ html, body {
 
 #btn-register-submit {
   height: 200px;
-  padding : 10px
-  font-size: 19px;
+  padding : 10px 32px;
+  font-size: 20px;
 }
 
 .btn-outline {
@@ -402,12 +404,14 @@ html, body {
 .dash-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  position: relative;
   height: var(--header-h);
   padding: 0 18px;
   background: var(--white);
   flex-shrink: 0;
 }
+
 
 .btn-hamburger {
   background: none;
@@ -417,6 +421,8 @@ html, body {
   flex-direction: column;
   gap: 5px;
   padding: 6px;
+  position: absolute;
+  left: 15px;
 }
 .btn-hamburger span {
   display: block;
@@ -518,13 +524,15 @@ html, body {
 .featured-carousel {
   position: relative;
   width: 100%;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   border-radius: 18px;
   background: var(--light-gray);
   height: 220px;
   display: flex;
-  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  will-change: transform;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
 }
 
 .carousel-slide {
@@ -536,19 +544,27 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--white);
+  background: var(--light-gray);
   cursor: pointer;
   transition: transform 0.12s;
   overflow: hidden;
   flex-shrink: 0;
+  border: none;
+  padding: 0;
 }
 
-.carousel-slide:active {
+.carousel-slide:active,
+.carousel-slide-btn:active {
   transform: scale(0.98);
 }
 
-.carousel-slide-img-wrap {
-  display: none;
+.carousel-slide-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .carousel-img {
@@ -556,6 +572,17 @@ html, body {
   height: 100%;
   object-fit: cover;
   display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.carousel-img:not([src]),
+.carousel-img[src=""] {
+  display: none;
+}
+
+.carousel-slide-img-wrap {
+  display: none;
 }
 
 .carousel-img-fallback {
@@ -573,7 +600,34 @@ html, body {
   opacity: 0.7;
 }
 
+.carousel-text-content {
+  display: none;
+}
 
+.carousel-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  opacity: 0.95;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.carousel-title {
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1.3;
+  margin: 0;
+  color: white;
+}
+
+.carousel-description {
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.9;
+  margin: 0;
+  line-height: 1.4;
+}
 
 .carousel-slide-eyebrow {
   font-size: 11px;
@@ -599,13 +653,15 @@ html, body {
 
 .carousel-arrow {
   position: absolute;
-  right: 12px;
+  right: 16px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 20px;
-  color: var(--red);
-  opacity: 0.9;
-  z-index: 10;
+  font-size: 24px;
+  color: white;
+  opacity: 0.85;
+  z-index: 20;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
 }
 
 /* Carousel dots */
@@ -1139,33 +1195,62 @@ html, body {
 /* ============================================================
     PAGE — ACCOUNT
     ============================================================ */
-.account-body { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+.account-body { 
+  flex: 1; 
+  overflow-y: auto; 
+  display: flex; 
+  flex-direction: column; }
 .account-profile-header {
-  display: flex; flex-direction: column; align-items: center;
+  display: flex; 
+  flex-direction: column; 
+  align-items: center;
   padding: 24px 20px 20px;
   text-align: center;
 }
-.account-avatar-wrap { position: relative; margin-bottom: 12px; }
+.account-avatar-wrap { 
+  position: relative; 
+  margin-bottom: 12px; 
+}
 .account-profile-img {
-  width: 90px; height: 90px; border-radius: 50%; object-fit: cover;
-  border: 3px solid var(--red);
+  width: 100px; 
+  height: 100px; 
+  border-radius: 50%; 
+  object-fit: cover;
+  display: block;
+  object-position: top;
 }
 .account-avatar-fallback {
-  width: 90px; height: 90px; border-radius: 50%;
-  background: var(--red); color: white;
-  font-size: 36px; font-weight: 900;
-  display: flex; align-items: center; justify-content: center;
+  width: 90px; 
+  height: 90px; 
+  border-radius: 50%;
+  background: var(--red); 
+  color: white;
+  font-size: 36px; 
+  font-weight: 900;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
   border: 3px solid var(--red);
 }
-img[src=""]:not([src]) + .account-avatar-fallback,
-img[src=""] + .account-avatar-fallback { display: flex; }
-img:not([src=""]) + .account-avatar-fallback { display: none; }
+img[src="userprofile.png"]:not([src]) + .account-avatar-fallback,
+img[src="userprofile.png"] + .account-avatar-fallback { 
+  display: flex; }
+
+
 
 .account-edit-avatar-btn {
-  position: absolute; bottom: 2px; right: 2px;
-  width: 28px; height: 28px; border-radius: 50%;
-  background: var(--red); color: white; font-size: 12px;
-  display: flex; align-items: center; justify-content: center;
+  position: absolute; 
+  bottom: 2px; 
+  right: 2px;
+  width: 28px; 
+  height: 28px; 
+  border-radius: 50%;
+  background: var(--red); 
+  color: white; 
+  font-size: 12px;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
   border: none; cursor: pointer;
 }

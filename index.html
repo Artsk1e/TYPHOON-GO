@@ -162,7 +162,6 @@
           <span class="logo-typhoon-sm">TYPHOON</span>
           <span class="logo-go-sm">GO</span>
         </div>
-        <div class="avatar-circle">A</div>
       </header>
       <div class="inner-divider"></div>
 
@@ -175,25 +174,23 @@
         </button>
 
         <!-- SOS Button Label -->
-        <div class="sos-button-label">TAP TO SEND SOS</div>
+        <div class="sos-button-label">HOLD TO SEND SOS</div>
 
         <!-- 2. Featured Carousel -->
         <div class="featured-carousel-wrap">
           <div class="featured-carousel" id="featured-carousel">
 
             <!-- Slide 1: Typhoon Safety Tips -->
-            <div class="carousel-slide" id="carousel-slide-0" data-target="page-survival-tips">
-              <!-- ASSET PLACEHOLDER: Replace src with your storm/house illustration -->
-              <img src="typhoontips.png" alt="Typhoon Safety Guide" class="carousel-img carousel-img-storm" />
+            <button class="carousel-slide carousel-slide-btn" id="carousel-slide-0" data-target="page-survival-tips">
+              <img src="typhoontips.png" alt="Typhoon Safety Guide" class="carousel-img" />
               <i class="fas fa-chevron-right carousel-arrow"></i>
-            </div>
+            </button>
 
             <!-- Slide 2: First Aid -->
-            <div class="carousel-slide" id="carousel-slide-1" data-target="page-first-aid">
-              <!-- ASSET PLACEHOLDER: Replace src with your first aid kit illustration -->
-              <img src="firstaid&safetytips.png" alt="First Aid Guide" class="carousel-img carousel-img-firstaid" />
+            <button class="carousel-slide carousel-slide-btn" id="carousel-slide-1" data-target="page-first-aid">
+              <img src="firstaid&amp;safetytips.png" alt="First Aid Guide" class="carousel-img" />
               <i class="fas fa-chevron-right carousel-arrow"></i>
-            </div>
+            </button>
 
           </div>
 
@@ -527,8 +524,8 @@
         <div class="account-profile-header">
           <!-- ASSET PLACEHOLDER: Replace src with the user's profile photo -->
           <div class="account-avatar-wrap">
-            <img src="" alt="Profile Photo" class="account-profile-img" id="account-profile-img" />
-            <div class="account-avatar-fallback" id="account-avatar-fallback">T</div>
+            <img src="userprofile.png" alt="Profile Photo" class="account-profile-img" id="account-profile-img" />
+            
             <button class="account-edit-avatar-btn"><i class="fas fa-pencil-alt"></i></button>
           </div>
           <p class="account-welcome">Welcome back,</p>
@@ -597,6 +594,7 @@
           <span class="nav-label">Account</span>
         </button>
       </nav>
+    </div>
 
     <!-- ========================================================== -->
     <!-- PAGE 8/9 — SAFE ROUTES                                    -->
@@ -720,6 +718,159 @@
     </div>
 
     <!-- ========================================================== -->
+    <!-- PAGE 8 — TYPHOON SURVIVAL TIPS                             -->
+    <!-- ========================================================== -->
+    <div id="page-survival-tips" class="page has-navbar">
+      <header class="inner-header">
+        <button class="btn-back" data-target="page-dashboard">&#8592;</button>
+        <div class="header-logo-mixed">
+          <span class="logo-typhoon-sm">Typhoon</span>
+          <span class="logo-go-sm">Safety Tips</span>
+        </div>
+        <div class="avatar-circle">A</div>
+      </header>
+      <div class="inner-divider"></div>
+
+      <main class="inner-body">
+        <div class="typhoon-tips-content">
+          <h1 class="tips-title">Typhoon Safety Tips</h1>
+          <p class="tips-description">When a storm is on the horizon, proactive preparation is the single most effective way to protect your home and family. This guide outlines critical safety protocols to follow before, during, and after a typhoon to help you minimize risks and stay out of harm's way.</p>
+          
+          <div class="tips-section">
+            <h2 class="tips-section-title">Before the Typhoon</h2>
+            <ul class="tips-list">
+              <li>Prepare a 3-day emergency kit (water, food, and medicine)</li>
+              <li>Secure loose objects around the house (e.g., roof tiles, pots)</li>
+              <li>Know your local evacuation center</li>
+              <li>Trim branches and clear gutters</li>
+              <li>Charge all electronic devices and power banks</li>
+              <li>Keep important documents in a waterproof bag</li>
+            </ul>
+          </div>
+          <div class="separate-line"></div>
+          
+          <div class="tips-section">
+            <h2 class="tips-section-title">During the Typhoon</h2>
+            <ul class="tips-list">
+              <li>Stay indoors, move to a safe interior room away from windows</li>
+              <li>Keep a battery-powered radio for updates</li>
+              <li>Turn off the main power if water rises and enters your home</li>
+              <li>Do not go outside no matter how calm it seems</li>
+              <li>Keep children and pets in a designated safe area</li>
+              <li>Listen to emergency broadcasts for safety instructions</li>
+            </ul>
+          </div>
+          <div class="separate-line"></div>
+          
+          <div class="tips-section">
+            <h2 class="tips-section-title">After the Typhoon</h2>
+            <ul class="tips-list">
+              <li>Inspect your house for structural damage before entering</li>
+              <li>Beware of fallen power lines and floodwaters</li>
+              <li>Report damages to local authorities immediately</li>
+              <li>Use flashlights instead of candles to avoid fire hazards</li>
+              <li>Check on neighbors and community members</li>
+              <li>Dispose of spoiled food and contaminated water</li>
+            </ul>
+          </div>
+        </div>
+      </main>
+
+      <!-- Global Navbar -->
+      <nav class="global-navbar">
+        <button class="nav-btn" data-target="page-dashboard">
+          <i class="fas fa-home nav-icon"></i>
+          <span class="nav-label">Home</span>
+        </button>
+        <button class="nav-btn" data-target="page-safe-routes">
+          <i class="fas fa-map-marked-alt nav-icon"></i>
+          <span class="nav-label">Map</span>
+        </button>
+        <button class="nav-btn" data-target="page-contacts">
+          <i class="fas fa-phone nav-icon"></i>
+          <span class="nav-label">Call</span>
+        </button>
+        <button class="nav-btn" data-target="page-account">
+          <i class="fas fa-user-circle nav-icon"></i>
+          <span class="nav-label">Account</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- PAGE 9 — FIRST AID & SURVIVAL GUIDE                        -->
+    <!-- ========================================================== -->
+    <div id="page-first-aid" class="page has-navbar">
+      <header class="inner-header">
+        <button class="btn-back" data-target="page-dashboard">&#8592;</button>
+        <div class="header-logo-mixed">
+          <span class="logo-typhoon-sm">First Aid &</span>
+          <span class="logo-go-sm">Survival</span>
+        </div>
+        <div class="avatar-circle">A</div>
+      </header>
+      <div class="inner-divider"></div>
+
+      <main class="inner-body">
+        <div class="first-aid-content">
+          <h1 class="first-aid-title">First Aid & Survival Guide</h1>
+          <h3 class="first-aid-description">In the wake of an emergency, knowing how to respond to injuries and manage limited resources can be life-saving. These essential survival strategies and first aid techniques are designed to provide you with the practical skills needed to handle medical situations and maintain safety until professional help arrives.</h3>
+          
+          <div class="first-aid-section">
+            <h2 class="first-aid-section-title">Essential First Aid Kit (Waterproof)</h2>
+            <ul class="first-aid-list">
+              <li><strong>Wound Care:</strong> Antiseptic wipes, alcohol, cotton, gauze, bandages, adhesive plasters.</li>
+              <li><strong>Medicine:</strong> Pain relievers (paracetamol), anti-diarrheal medication, antibiotics, and personal prescription medications.</li>
+              <li><strong>Hygiene/Safety:</strong> Face masks, hand sanitizer, soap, mosquito repellent, and a whistle.</li>
+              <li><strong>Tools:</strong> Small flashlight (or headlamp), extra batteries, scissors, tweezers.</li>
+            </ul>
+          </div>
+          <div class="separate-line"></div>
+          
+          <div class="first-aid-section">
+            <h2 class="first-aid-section-title">Immediate First Aid Actions</h2>
+            <ul class="first-aid-list">
+              <li><strong>Stop Bleeding:</strong> Apply direct pressure to wounds using a sterile cloth or bandage.</li>
+              <li><strong>Treat Minor Cuts:</strong> Clean with antiseptic wipes or alcohol to prevent infection from dirty water.</li>
+              <li><strong>Manage Fractures:</strong> Keep the injured area still and elevated, and seek medical attention as soon as possible.</li>
+              <li><strong>Prevent Illness:</strong> Wash hands frequently with sanitizer and consume only clean water to avoid diarrhea and skin infections.</li>
+            </ul>
+          </div>
+          <div class="separate-line"></div>
+          
+          <div class="first-aid-section">
+            <h2 class="first-aid-section-title">CPR & Choking Response</h2>
+            <ul class="first-aid-list">
+              <li><strong>CPR (Cardiopulmonary Resuscitation):</strong> For unresponsive person with no pulse, perform chest compressions at 100-120 beats per minute.</li>
+              <li><strong>Choking Victim:</strong> Perform the Heimlich maneuver by placing a fist above the navel and delivering upward thrusts.</li>
+              <li><strong>Recovery Position:</strong> Place unconscious breathing victim on their side to maintain airway patency.</li>
+            </ul>
+          </div>
+        </div>
+      </main>
+
+      <!-- Global Navbar -->
+      <nav class="global-navbar">
+        <button class="nav-btn" data-target="page-dashboard">
+          <i class="fas fa-home nav-icon"></i>
+          <span class="nav-label">Home</span>
+        </button>
+        <button class="nav-btn" data-target="page-safe-routes">
+          <i class="fas fa-map-marked-alt nav-icon"></i>
+          <span class="nav-label">Map</span>
+        </button>
+        <button class="nav-btn" data-target="page-contacts">
+          <i class="fas fa-phone nav-icon"></i>
+          <span class="nav-label">Call</span>
+        </button>
+        <button class="nav-btn" data-target="page-account">
+          <i class="fas fa-user-circle nav-icon"></i>
+          <span class="nav-label">Account</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- ========================================================== -->
     <!-- PAGE 10 — EMERGENCY UPDATES                               -->
     <!-- ========================================================== -->
     <div id="page-emergency-updates" class="page has-navbar">
@@ -729,7 +880,6 @@
           <span class="logo-typhoon-sm">Emergency</span>
           <span class="logo-go-sm">Updates</span>
         </div>
-        <div class="avatar-circle">A</div>
       </header>
       <div class="inner-divider"></div>
 
