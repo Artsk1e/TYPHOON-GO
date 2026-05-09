@@ -8,8 +8,6 @@
 // ── Leaflet Map Initialization ────────────────────────────────
 
 let map;
-let sosMap;
-let sosSubmittedMap;
 
 /**
  * Initialize the Leaflet map for the Safe Routes page.
@@ -30,68 +28,12 @@ function initFreeMap() {
   marker.bindPopup("<b>MSU-IIT</b><br>Iligan City, Lanao del Norte.").openPopup();
 }
 
-/**
- * Initialize the Leaflet map for the SOS page (non-interactive).
- * Uses OpenStreetMap tiles and centers on MSU-IIT, Iligan City, Philippines.
- */
-function initSOSMap() {
-  // Initialize the map with MSU-IIT coordinates
-  sosMap = L.map('map-container-sos', {
-    dragging: false,
-    touchZoom: false,
-    doubleClickZoom: false,
-    scrollWheelZoom: false,
-    boxZoom: false,
-    keyboard: false,
-    zoomControl: false,
-    attributionControl: false
-  }).setView([8.2411, 124.2439], 15);
-
-  // Load free map tiles from OpenStreetMap
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-  }).addTo(sosMap);
-
-  // Add marker for MSU-IIT
-  let marker = L.marker([8.2411, 124.2439]).addTo(sosMap);
-  marker.bindPopup("<b>MSU-IIT</b><br>Iligan City, Lanao del Norte.").openPopup();
-}
-
-/**
- * Initialize the Leaflet map for the SOS Submitted page (non-interactive).
- * Shows success confirmation with map display and help message.
- */
-function initSOSSubmittedMap() {
-  // Initialize the map with MSU-IIT coordinates (non-interactive)
-  sosSubmittedMap = L.map('map-container-sos-submitted', {
-    dragging: false,
-    touchZoom: false,
-    doubleClickZoom: false,
-    scrollWheelZoom: false,
-    boxZoom: false,
-    keyboard: false,
-    zoomControl: false,
-    attributionControl: false
-  }).setView([8.2411, 124.2439], 15);
-
-  // Load free map tiles from OpenStreetMap
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-  }).addTo(sosSubmittedMap);
-
-  // Add marker for MSU-IIT
-  let marker = L.marker([8.2411, 124.2439]).addTo(sosSubmittedMap);
-  marker.bindPopup("<b>MSU-IIT</b><br>Iligan City, Lanao del Norte.").openPopup();
-}
-
 const pages = document.querySelectorAll('.page');
 
 /**
  * Navigate to a page by its ID string.
  * Adds a slide-in animation class for visual polish.
- * Initializes the map for the Safe Routes page on first load.
+ * Updates navbar active states based on current page.
  */
 function navigateTo(targetId) {
   const currentActive = document.querySelector('.page.active');
@@ -116,38 +58,38 @@ function navigateTo(targetId) {
   // Scroll target to top
   target.scrollTop = 0;
 
+  // Update navbar active states
+  updateNavbarActive(targetId);
+
   // Initialize map if navigating to Safe Routes page
   if (targetId === 'page-safe-routes') {
     setTimeout(() => {
       if (!map) {
         initFreeMap();
       } else {
-        map.invalidateSize(); // Fixes rendering if map was hidden
+        map.invalidateSize();
       }
     }, 100);
   }
+}
 
-  // Initialize map if navigating to SOS page
-  if (targetId === 'page-sos') {
-    setTimeout(() => {
-      if (!sosMap) {
-        initSOSMap();
-      } else {
-        sosMap.invalidateSize(); // Fixes rendering if map was hidden
-      }
-    }, 100);
-  }
-
-  // Initialize map if navigating to SOS Submitted page
-  if (targetId === 'page-sos-submitted') {
-    setTimeout(() => {
-      if (!sosSubmittedMap) {
-        initSOSSubmittedMap();
-      } else {
-        sosSubmittedMap.invalidateSize(); // Fixes rendering if map was hidden
-      }
-    }, 100);
-  }
+/**
+ * Update which navbar button is active based on current page
+ */
+function updateNavbarActive(pageId) {
+  // Get all navbar buttons
+  const navBtns = document.querySelectorAll('.nav-btn');
+  
+  // Remove active class from all
+  navBtns.forEach(btn => btn.classList.remove('nav-active'));
+  
+  // Add active class to relevant button
+  navBtns.forEach(btn => {
+    const target = btn.getAttribute('data-target');
+    if (target === pageId) {
+      btn.classList.add('nav-active');
+    }
+  });
 }
 
 // ── Login Page Wiring ─────────────────────────────────────────
@@ -207,8 +149,8 @@ document.getElementById('btn-register-submit').addEventListener('click', () => {
 
 // ── Dashboard Wiring ──────────────────────────────────────────
 
-document.getElementById('btn-sos-rescue').addEventListener('click', () => {
-  navigateTo('page-sos');
+document.getElementById('btn-tap-sos').addEventListener('click', () => {
+  showToast('Emergency SOS activated! Help is being dispatched.');
 });
 
 document.getElementById('btn-evac-centers').addEventListener('click', () => {
@@ -223,15 +165,6 @@ document.getElementById('btn-emergency-updates').addEventListener('click', () =>
   navigateTo('page-emergency-updates');
 });
 
-// Dashboard navbar
-document.getElementById('nav-map-dash').addEventListener('click', () => {
-  navigateTo('page-safe-routes');
-});
-
-document.getElementById('nav-notif-dash').addEventListener('click', () => {
-  navigateTo('page-emergency-updates');
-});
-
 // ── Back Buttons (generic) ────────────────────────────────────
 
 // All elements with data-target attribute (nav buttons and back buttons)
@@ -242,25 +175,63 @@ document.querySelectorAll('[data-target]').forEach(el => {
   });
 });
 
-// ── SOS Page — Tap to Send SOS ───────────────────────────────
+// ── Carousel Functionality ────────────────────────────────────
 
-document.getElementById('btn-tap-sos').addEventListener('click', () => {
-  // Mirror checkbox state from SOS page to form page
-  syncCheckboxes();
-  navigateTo('page-sos-form');
+let currentSlide = 0;
+const carousel = document.getElementById('featured-carousel');
+const carouselDots = document.querySelectorAll('.carousel-dot');
+
+function showSlide(index) {
+  const slides = document.querySelectorAll('.carousel-slide');
+
+  // Update slide position
+  carousel.style.transform = `translateX(-${index * 100}%)`;
+
+  // Update dots
+  carouselDots.forEach((dot, i) => {
+    dot.classList.toggle('active', i === index);
+  });
+
+  currentSlide = index;
+}
+
+// Add click listeners to carousel dots
+carouselDots.forEach(dot => {
+  dot.addEventListener('click', () => {
+    const index = parseInt(dot.getAttribute('data-index'));
+    showSlide(index);
+  });
 });
 
-/**
- * Syncs the checkbox selections from the SOS page to the form page.
- */
-function syncCheckboxes() {
-  const chkChildren = document.getElementById('chk-children').checked;
-  const chkElderly  = document.getElementById('chk-elderly').checked;
-  const chkMedical  = document.getElementById('chk-medical').checked;
+// Auto-rotate carousel every 5 seconds
+setInterval(() => {
+  const nextSlide = (currentSlide + 1) % 2;
+  showSlide(nextSlide);
+}, 5000);
 
-  document.getElementById('form-chk-children').checked = chkChildren;
-  document.getElementById('form-chk-elderly').checked  = chkElderly;
-  document.getElementById('form-chk-medical').checked  = chkMedical;
+// Add swipe/touch functionality for carousel
+let touchStartX = 0;
+let touchEndX = 0;
+
+carousel.addEventListener('touchstart', (e) => {
+  touchStartX = e.changedTouches[0].screenX;
+});
+
+carousel.addEventListener('touchend', (e) => {
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipe();
+});
+
+function handleSwipe() {
+  if (touchStartX - touchEndX > 50) {
+    // Swiped left, go to next slide
+    const nextSlide = (currentSlide + 1) % 2;
+    showSlide(nextSlide);
+  } else if (touchEndX - touchStartX > 50) {
+    // Swiped right, go to previous slide
+    const prevSlide = (currentSlide - 1 + 2) % 2;
+    showSlide(prevSlide);
+  }
 }
 
 // ── Safe Routes — Destination Dropdown ───────────────────────
@@ -379,16 +350,18 @@ function showToast(message, success = false) {
   }, 2200);
 }
 
-// ── Location Button on Form Page ─────────────────────────────
-
-document.getElementById('btn-location').addEventListener('click', () => {
-  navigateTo('page-sos-submitted');
-});
 
 // ── Hamburger Menu (Dashboard) ───────────────────────────────
 
 document.getElementById('btn-hamburger').addEventListener('click', () => {
   showToast('Menu coming soon!');
+});
+
+// ── Account Page Logout ──────────────────────────────────────
+
+document.getElementById('btn-logout').addEventListener('click', () => {
+  showToast('Logged out successfully!', true);
+  setTimeout(() => navigateTo('page-login'), 1200);
 });
 
 // ── Init ─────────────────────────────────────────────────────
@@ -400,5 +373,11 @@ window.addEventListener('DOMContentLoaded', () => {
   const hasActive = document.querySelector('.page.active');
   if (!hasActive) {
     document.getElementById('page-login').classList.add('active');
+  } else {
+    // Set navbar active state if active page has navbar
+    const activePage = document.querySelector('.page.active');
+    if (activePage.id) {
+      updateNavbarActive(activePage.id);
+    }
   }
 });

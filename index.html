@@ -167,238 +167,105 @@
       <div class="inner-divider"></div>
 
       <main class="dash-body">
-        <!-- SOS Rescue Big Button -->
-        <button id="btn-sos-rescue" class="sos-rescue-btn">
-          <span class="sos-text">SOS</span>
-          <span class="rescue-text">RESCUE</span>
-        </button>
-
-        <!-- Three action cards -->
-        <div class="action-cards">
-          <button id="btn-evac-centers" class="action-card">
-            <span class="action-icon">🏠</span>
-            <span class="action-label">Evacuation<br />Centers</span>
-          </button>
-          <button id="btn-safe-routes" class="action-card">
-            <span class="action-icon">📍</span>
-            <span class="action-label">Safe Routes</span>
-          </button>
-          <button id="btn-emergency-updates" class="action-card">
-            <span class="action-icon">🚨</span>
-            <span class="action-label">Emergency<br />Updates</span>
-          </button>
-        </div>
-      </main>
-
-      <!-- Global Navbar -->
-      <nav class="global-navbar" id="global-navbar-dashboard">
-        <button class="nav-btn" id="nav-map-dash">
-          <span class="nav-icon">📍</span>
-          <span class="nav-label">Map</span>
-        </button>
-        <button class="nav-phone-btn" id="nav-phone-dash">
-          <span class="nav-phone-icon">📞</span>
-        </button>
-        <button class="nav-btn" id="nav-notif-dash">
-          <span class="nav-icon">((·))</span>
-          <span class="nav-label">Notification</span>
-        </button>
-      </nav>
-    </div>
-
-    <!-- ========================================================== -->
-    <!-- PAGE 4 — SOS RESCUE (Tap to Send SOS)                     -->
-    <!-- ========================================================== -->
-    <div id="page-sos" class="page has-navbar">
-      <header class="inner-header">
-        <button class="btn-back" data-target="page-dashboard">&#8592;</button>
-        <div class="header-logo">
-          <span class="logo-typhoon-sm">TYPHOON</span>
-          <span class="logo-go-sm">GO</span>
-        </div>
-        <div class="avatar-circle">A</div>
-      </header>
-      <div class="inner-divider"></div>
-
-      <main class="sos-body">
-        <!-- Leaflet Map Container -->
-        <div class="sos-map-bg" id="map-container-sos"></div>
-        
-        <!-- Semi-transparent overlay -->
-        <div class="sos-map-overlay"></div>
-
-        <!-- Big red SOS circle -->
+        <!-- 1. SOS Action Area -->
         <button id="btn-tap-sos" class="sos-circle-outer">
           <div class="sos-circle-inner">
-            <!-- Tap hand icon from Font Awesome -->
             <i class="fas fa-hand-paper tap-icon"></i>
           </div>
         </button>
 
         <!-- SOS Button Label -->
         <div class="sos-button-label">TAP TO SEND SOS</div>
-        
-        <!-- Label & Checkboxes below map -->
-        <div class="sos-form-area">
-          <h2 class="sos-tap-label">TAP TO SEND SOS</h2>
 
-          <div class="checkbox-group" id="sos-checkboxes">
-            <label class="custom-checkbox">
-              <input type="checkbox" id="chk-children" name="sos-option" value="children" />
-              <span class="checkmark"></span>
-              <span class="chk-label">With Children</span>
-            </label>
-            <label class="custom-checkbox">
-              <input type="checkbox" id="chk-elderly" name="sos-option" value="elderly" />
-              <span class="checkmark"></span>
-              <span class="chk-label">With Elderly</span>
-            </label>
-            <label class="custom-checkbox">
-              <input type="checkbox" id="chk-medical" name="sos-option" value="medical" />
-              <span class="checkmark"></span>
-              <span class="chk-label">Need Medical Assistance</span>
-            </label>
+        <!-- 2. Featured Carousel -->
+        <div class="featured-carousel-wrap">
+          <div class="featured-carousel" id="featured-carousel">
+
+            <!-- Slide 1: Typhoon Safety Tips -->
+            <div class="carousel-slide" id="carousel-slide-0" data-target="page-survival-tips">
+              <!-- ASSET PLACEHOLDER: Replace src with your storm/house illustration -->
+              <img src="typhoontips.png" alt="Typhoon Safety Guide" class="carousel-img carousel-img-storm" />
+              <i class="fas fa-chevron-right carousel-arrow"></i>
+            </div>
+
+            <!-- Slide 2: First Aid -->
+            <div class="carousel-slide" id="carousel-slide-1" data-target="page-first-aid">
+              <!-- ASSET PLACEHOLDER: Replace src with your first aid kit illustration -->
+              <img src="firstaid&safetytips.png" alt="First Aid Guide" class="carousel-img carousel-img-firstaid" />
+              <i class="fas fa-chevron-right carousel-arrow"></i>
+            </div>
+
+          </div>
+
+          <!-- Carousel Dots -->
+          <div class="carousel-dots">
+            <span class="carousel-dot active" data-index="0"></span>
+            <span class="carousel-dot" data-index="1"></span>
           </div>
         </div>
+
+        <!-- 3. Resource Grid (2x2) -->
+        <div class="resource-grid">
+          <button class="resource-tile" id="btn-gobag">
+            <div class="resource-tile-img-wrap" id="gobag-img">
+              <img src="gobagchecklist.png" alt="Go-Bag Checklist" class="resource-tile-img" />
+            </div>
+            <h2 class="resource-tile-title">Go-Bag Checklist</h2>
+            <p class="resource-tile-description">Be ready before it hits!</p>
+            <p class="resource-tile-subtitle">Track and pack your essential survival items to stay one step ahead of the storm.</p>
+          </button>
+
+          <button class="resource-tile" id="btn-emergency-updates">
+            <div class="resource-tile-img-wrap" id="emergency-updates-img">
+              <img src="emergencyupdate.png" alt="Emergency Updates" class="resource-tile-img" />
+            </div>
+            <h2 class="resource-tile-title">Emergency Updates</h2>
+            <p class="resource-tile-description">Stay informed, stay safe!</p>
+            <p class="resource-tile-subtitle">Get real-time, critical weather alerts and official updates directly from local authorities.</p>
+          </button>
+
+          <button class="resource-tile" id="btn-safe-routes">
+            <div class="resource-tile-img-wrap" id="safe-routes-img">
+              <img src="saferoutes.png" alt="Safe Routes" class="resource-tile-img" />
+            </div>
+            <h2 class="resource-tile-title">Safe Routes</h2>
+            <p class="resource-tile-description">Navigate clear of hazards!</p>
+            <p class="resource-tile-subtitle">Find flood-free streets and secure paths to safety using our local hazard map.</p>
+          </button>
+
+          <button class="resource-tile" id="btn-evac-centers">
+            <div class="resource-tile-img-wrap" id="evac-centers-img">
+              <img src="evacuationcenter.png" alt="Evacuation Centers" class="resource-tile-img" />
+            </div>
+            <h2 class="resource-tile-title">Evacuation Centers</h2>
+            <p class="resource-tile-description">Find safe shelter fast!</p>
+            <p class="resource-tile-subtitle">Locate the nearest open evacuation facilities and instantly check their available capacity.</p>
+          </button>
+        </div>
       </main>
 
+      <!-- Global Navbar -->
       <nav class="global-navbar">
+        <button class="nav-btn nav-active" data-target="page-dashboard">
+          <i class="fas fa-home nav-icon"></i>
+          <span class="nav-label">Home</span>
+        </button>
         <button class="nav-btn" data-target="page-safe-routes">
-          <span class="nav-icon">📍</span>
+          <i class="fas fa-map-marked-alt nav-icon"></i>
           <span class="nav-label">Map</span>
         </button>
-        <button class="nav-phone-btn">
-          <span class="nav-phone-icon">📞</span>
+        <button class="nav-btn" data-target="page-contacts">
+          <i class="fas fa-phone nav-icon"></i>
+          <span class="nav-label">Call</span>
         </button>
-        <button class="nav-btn" data-target="page-emergency-updates">
-          <span class="nav-icon">((·))</span>
-          <span class="nav-label">Notification</span>
+        <button class="nav-btn" data-target="page-account">
+          <i class="fas fa-user-circle nav-icon"></i>
+          <span class="nav-label">Account</span>
         </button>
       </nav>
     </div>
 
-    <!-- ========================================================== -->
-    <!-- PAGE 5 — SOS FORM (After tapping SOS)                     -->
-    <!-- ========================================================== -->
-    <div id="page-sos-form" class="page has-navbar">
-      <header class="inner-header">
-        <button class="btn-back" data-target="page-sos">&#8592;</button>
-        <div class="header-logo-red">
-          <span class="logo-typhoon-sm">SOS</span>
-          <span class="logo-go-sm">RESCUE</span>
-        </div>
-        <div class="avatar-circle">A</div>
-      </header>
-      <div class="inner-divider"></div>
 
-      <main class="inner-body">
-
-        <div class="sos-form-field">
-          <p class="sos-field-label">Name:</p>
-          <input class="sos-field-input" id="form-name" type="text" placeholder="e.g., Trisha Nicole Jacuba" />
-          <div class="field-underline"></div>
-        </div>
-
-        <div class="sos-form-field">
-          <p class="sos-field-label">Phone Number:</p>
-          <input class="sos-field-input" id="form-phone" type="tel" placeholder="0905 925 2860" />
-          <div class="field-underline"></div>
-        </div>
-
-        <div class="sos-form-field">
-          <p class="sos-field-label">Address:</p>
-          <input class="sos-field-input" id="form-address" type="text" placeholder="e.g, Andres Bonifacio Ave, Tibanga, Iligan City" />
-          <div class="field-underline"></div>
-        </div>
-
-        <!-- Mirror checkboxes from SOS page -->
-        <div class="checkbox-group form-checkboxes" id="form-checkboxes-display">
-          <label class="custom-checkbox">
-            <input type="checkbox" id="form-chk-children" name="form-option" value="children" />
-            <span class="checkmark"></span>
-            <span class="chk-label">With Children</span>
-          </label>
-          <label class="custom-checkbox">
-            <input type="checkbox" id="form-chk-elderly" name="form-option" value="elderly" checked/>
-            <span class="checkmark"></span>
-            <span class="chk-label">With Elderly</span>
-          </label>
-          <label class="custom-checkbox">
-            <input type="checkbox" id="form-chk-medical" name="form-option" value="medical" />
-            <span class="checkmark"></span>
-            <span class="chk-label">Need Medical Assistance.</span>
-          </label>
-        </div>
-
-        <div class="form-group">
-          <label>Description</label>
-          <textarea id="form-description" class="form-input" placeholder="Describe your situation or needs (optional)"></textarea>
-        </div>
-
-        <button id="btn-location" class="btn-location" data-target="page-sos-submitted">
-          <span class="location-btn-text">LOCATION</span>
-        </button>
-
-      </main>
-
-      <nav class="global-navbar">
-        <button class="nav-btn" data-target="page-safe-routes">
-          <span class="nav-icon">📍</span>
-          <span class="nav-label">Map</span>
-        </button>
-        <button class="nav-phone-btn">
-          <span class="nav-phone-icon">📞</span>
-        </button>
-        <button class="nav-btn" data-target="page-emergency-updates">
-          <span class="nav-icon">((·))</span>
-          <span class="nav-label">Notification</span>
-        </button>
-      </nav>
-    </div>
-
-    <!-- ========================================================== -->
-    <!-- PAGE 5B - SOS SUBMITTED (After pressing Location button)  -->
-    <!-- ========================================================== -->
-    <div id="page-sos-submitted" class="page has-navbar">
-      <header class="inner-header">
-        <div class="header-logo-red">
-          <span class="logo-typhoon-sm">SOS</span>
-          <span class="logo-go-sm">RESCUE</span>
-        </div>
-        <div class="avatar-circle">A</div>
-      </header>
-      <div class="inner-divider"></div>
-
-      <main class="sos-submitted-body">
-        <!-- Leaflet Map Container -->
-        <div class="sos-submitted-map" id="map-container-sos-submitted"></div>
-
-        <!-- Success Message -->
-        <div class="sos-success-message">
-          <p>SOS Received.</p>
-          <p>Help is on the way.</p>
-        </div>
-
-        <!-- Back to Dashboard Button -->
-        <button class="btn-back-dashboard" data-target="page-dashboard">
-          Back to Dashboard
-        </button>
-      </main>
-
-      <nav class="global-navbar">
-        <button class="nav-btn" data-target="page-safe-routes">
-          <span class="nav-icon">📍</span>
-          <span class="nav-label">Map</span>
-        </button>
-        <button class="nav-phone-btn">
-          <span class="nav-phone-icon">📞</span>
-        </button>
-        <button class="nav-btn" data-target="page-emergency-updates">
-          <span class="nav-icon">((·))</span>
-          <span class="nav-label">Notification</span>
-        </button>
-      </nav>
-    </div>
 
     <!-- ========================================================== -->
     <!-- PAGE 7 — EVACUATION CENTERS                               -->
@@ -493,19 +360,243 @@
       </main>
 
       <nav class="global-navbar">
+        <button class="nav-btn nav-active" data-target="page-dashboard">
+          <i class="fas fa-home nav-icon"></i>
+          <span class="nav-label">Home</span>
+        </button>
         <button class="nav-btn" data-target="page-safe-routes">
-          <span class="nav-icon">📍</span>
-          <span class="nav-label">Location</span>
+          <i class="fas fa-map-marked-alt nav-icon"></i>
+          <span class="nav-label">Map</span>
         </button>
-        <button class="nav-phone-btn">
-          <span class="nav-phone-icon">📞</span>
+        <button class="nav-btn" data-target="page-contacts">
+          <i class="fas fa-phone nav-icon"></i>
+          <span class="nav-label">Call</span>
         </button>
-        <button class="nav-btn" data-target="page-emergency-updates">
-          <span class="nav-icon">((·))</span>
-          <span class="nav-label">Notification</span>
+        <button class="nav-btn" data-target="page-account">
+          <i class="fas fa-user-circle nav-icon"></i>
+          <span class="nav-label">Account</span>
         </button>
       </nav>
     </div>
+
+    <!-- ========================================================== -->
+    <!-- PAGE — CONTACTS                                            -->
+    <!-- ========================================================== -->
+    <div id="page-contacts" class="page has-navbar">
+      <header class="inner-header">
+        <button class="btn-back" data-target="page-dashboard"><i class="fas fa-arrow-left"></i></button>
+        <div class="header-logo"><span class="logo-typhoon-sm">Emergency</span><span class="logo-go-sm">Contacts</span></div>
+        <div class="header-spacer"></div>
+      </header>
+      <div class="inner-divider"></div>
+
+      <main class="inner-body contacts-body">
+        <!-- Search Bar -->
+        <div class="search-bar-wrap">
+          <i class="fas fa-search search-icon"></i>
+          <input class="search-input" id="contacts-search" type="text" placeholder="Search emergency contacts..." />
+        </div>
+
+        <!-- Recent Calls Carousel -->
+        <p class="contacts-section-label">Recent Calls</p>
+        <div class="recent-calls-carousel" id="recent-calls-carousel">
+          <div class="recent-call-card" data-contact="Dad" data-target="page-message">
+            <div class="recent-call-avatar" style="background: #e74c3c;">D</div>
+            <span class="recent-call-name">Dad</span>
+            <span class="recent-call-time">2m ago</span>
+          </div>
+          <div class="recent-call-card" data-contact="CDRRMO" data-target="page-message">
+            <div class="recent-call-avatar" style="background: #2980b9;">C</div>
+            <span class="recent-call-name">CDRRMO</span>
+            <span class="recent-call-time">1h ago</span>
+          </div>
+          <div class="recent-call-card" data-contact="Mom" data-target="page-message">
+            <div class="recent-call-avatar" style="background: #8e44ad;">M</div>
+            <span class="recent-call-name">Mom</span>
+            <span class="recent-call-time">3h ago</span>
+          </div>
+          <div class="recent-call-card" data-contact="BFP" data-target="page-message">
+            <div class="recent-call-avatar" style="background: #e67e22;">B</div>
+            <span class="recent-call-name">BFP</span>
+            <span class="recent-call-time">5h ago</span>
+          </div>
+        </div>
+
+        <!-- Alphabetical Contact List -->
+        <div class="contact-list" id="contact-list">
+          <div class="contact-alpha-divider">B</div>
+          <div class="contact-row" data-contact="BFP Iligan" data-target="page-message">
+            <div class="contact-avatar" style="background:#e67e22;">B</div>
+            <div class="contact-info">
+              <span class="contact-name">BFP Iligan</span>
+              <span class="contact-rel">Bureau of Fire Protection</span>
+            </div>
+            <div class="contact-actions">
+              <button class="contact-action-btn contact-call"><i class="fas fa-phone"></i></button>
+              <button class="contact-action-btn contact-sms" data-contact="BFP Iligan" data-target="page-message"><i class="fas fa-comment"></i></button>
+            </div>
+          </div>
+
+          <div class="contact-alpha-divider">C</div>
+          <div class="contact-row" data-contact="CDRRMO" data-target="page-message">
+            <div class="contact-avatar" style="background:#2980b9;">C</div>
+            <div class="contact-info">
+              <span class="contact-name">CDRRMO</span>
+              <span class="contact-rel">City Disaster Risk Reduction</span>
+            </div>
+            <div class="contact-actions">
+              <button class="contact-action-btn contact-call"><i class="fas fa-phone"></i></button>
+              <button class="contact-action-btn contact-sms" data-contact="CDRRMO" data-target="page-message"><i class="fas fa-comment"></i></button>
+            </div>
+          </div>
+
+          <div class="contact-alpha-divider">D</div>
+          <div class="contact-row" data-contact="Dad" data-target="page-message">
+            <div class="contact-avatar" style="background:#e74c3c;">D</div>
+            <div class="contact-info">
+              <span class="contact-name">Dad</span>
+              <span class="contact-rel">Father</span>
+            </div>
+            <div class="contact-actions">
+              <button class="contact-action-btn contact-call"><i class="fas fa-phone"></i></button>
+              <button class="contact-action-btn contact-sms" data-contact="Dad" data-target="page-message"><i class="fas fa-comment"></i></button>
+            </div>
+          </div>
+
+          <div class="contact-alpha-divider">M</div>
+          <div class="contact-row" data-contact="Mom" data-target="page-message">
+            <div class="contact-avatar" style="background:#8e44ad;">M</div>
+            <div class="contact-info">
+              <span class="contact-name">Mom</span>
+              <span class="contact-rel">Mother</span>
+            </div>
+            <div class="contact-actions">
+              <button class="contact-action-btn contact-call"><i class="fas fa-phone"></i></button>
+              <button class="contact-action-btn contact-sms" data-contact="Mom" data-target="page-message"><i class="fas fa-comment"></i></button>
+            </div>
+          </div>
+
+          <div class="contact-alpha-divider">P</div>
+          <div class="contact-row" data-contact="PNP Iligan" data-target="page-message">
+            <div class="contact-avatar" style="background:#27ae60;">P</div>
+            <div class="contact-info">
+              <span class="contact-name">PNP Iligan</span>
+              <span class="contact-rel">Philippine National Police</span>
+            </div>
+            <div class="contact-actions">
+              <button class="contact-action-btn contact-call"><i class="fas fa-phone"></i></button>
+              <button class="contact-action-btn contact-sms" data-contact="PNP Iligan" data-target="page-message"><i class="fas fa-comment"></i></button>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <nav class="global-navbar">
+        <button class="nav-btn nav-active" data-target="page-dashboard">
+          <i class="fas fa-home nav-icon"></i>
+          <span class="nav-label">Home</span>
+        </button>
+        <button class="nav-btn" data-target="page-safe-routes">
+          <i class="fas fa-map-marked-alt nav-icon"></i>
+          <span class="nav-label">Map</span>
+        </button>
+        <button class="nav-btn" data-target="page-contacts">
+          <i class="fas fa-phone nav-icon"></i>
+          <span class="nav-label">Call</span>
+        </button>
+        <button class="nav-btn" data-target="page-account">
+          <i class="fas fa-user-circle nav-icon"></i>
+          <span class="nav-label">Account</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- PAGE — ACCOUNT                                             -->
+    <!-- ========================================================== -->
+    <div id="page-account" class="page has-navbar">
+      <header class="inner-header">
+        <button class="btn-back" data-target="page-dashboard"><i class="fas fa-arrow-left"></i></button>
+        <div class="header-logo"><span class="logo-typhoon-sm">TYPHOON</span><span class="logo-go-sm">GO</span></div>
+        <div class="header-spacer"></div>
+      </header>
+      <div class="inner-divider"></div>
+
+      <main class="account-body">
+        <!-- Profile Header -->
+        <div class="account-profile-header">
+          <!-- ASSET PLACEHOLDER: Replace src with the user's profile photo -->
+          <div class="account-avatar-wrap">
+            <img src="" alt="Profile Photo" class="account-profile-img" id="account-profile-img" />
+            <div class="account-avatar-fallback" id="account-avatar-fallback">T</div>
+            <button class="account-edit-avatar-btn"><i class="fas fa-pencil-alt"></i></button>
+          </div>
+          <p class="account-welcome">Welcome back,</p>
+          <h2 class="account-name">Trisha Nicole Q. Jacuba</h2>
+          <p class="account-email">trishanicolejacuba@gmail.com</p>
+        </div>
+
+        <div class="inner-divider"></div>
+
+        <!-- Menu List -->
+        <div class="account-menu">
+          <div class="account-menu-item">
+            <i class="fas fa-user-circle account-menu-icon"></i>
+            <span>User Profile</span>
+            <i class="fas fa-chevron-right account-menu-chevron"></i>
+          </div>
+          <div class="account-menu-item">
+            <i class="fas fa-key account-menu-icon"></i>
+            <span>Change Password</span>
+            <i class="fas fa-chevron-right account-menu-chevron"></i>
+          </div>
+          <div class="account-menu-item">
+            <i class="fas fa-cog account-menu-icon"></i>
+            <span>Settings and Preferences</span>
+            <i class="fas fa-chevron-right account-menu-chevron"></i>
+          </div>
+          <div class="account-menu-item">
+            <i class="fas fa-question-circle account-menu-icon"></i>
+            <span>Help and FAQ</span>
+            <i class="fas fa-chevron-right account-menu-chevron"></i>
+          </div>
+          <div class="account-menu-item">
+            <i class="fas fa-file-contract account-menu-icon"></i>
+            <span>Privacy Policy and Terms</span>
+            <i class="fas fa-chevron-right account-menu-chevron"></i>
+          </div>
+          <div class="account-menu-item">
+            <i class="fas fa-info-circle account-menu-icon"></i>
+            <span>About Typhoon Go</span>
+            <i class="fas fa-chevron-right account-menu-chevron"></i>
+          </div>
+        </div>
+
+        <div class="account-logout-wrap">
+          <button class="btn-logout" id="btn-logout">
+            <i class="fas fa-sign-out-alt"></i> Log Out
+          </button>
+        </div>
+      </main>
+
+      <nav class="global-navbar">
+        <button class="nav-btn nav-active" data-target="page-dashboard">
+          <i class="fas fa-home nav-icon"></i>
+          <span class="nav-label">Home</span>
+        </button>
+        <button class="nav-btn" data-target="page-safe-routes">
+          <i class="fas fa-map-marked-alt nav-icon"></i>
+          <span class="nav-label">Map</span>
+        </button>
+        <button class="nav-btn" data-target="page-contacts">
+          <i class="fas fa-phone nav-icon"></i>
+          <span class="nav-label">Call</span>
+        </button>
+        <button class="nav-btn" data-target="page-account">
+          <i class="fas fa-user-circle nav-icon"></i>
+          <span class="nav-label">Account</span>
+        </button>
+      </nav>
 
     <!-- ========================================================== -->
     <!-- PAGE 8/9 — SAFE ROUTES                                    -->
@@ -609,16 +700,21 @@
       </main>
 
       <nav class="global-navbar">
+        <button class="nav-btn nav-active" data-target="page-dashboard">
+          <i class="fas fa-home nav-icon"></i>
+          <span class="nav-label">Home</span>
+        </button>
         <button class="nav-btn nav-active" data-target="page-safe-routes">
-          <span class="nav-icon">📍</span>
+          <i class="fas fa-map-marked-alt nav-icon"></i>
           <span class="nav-label">Map</span>
         </button>
-        <button class="nav-phone-btn">
-          <span class="nav-phone-icon">📞</span>
+        <button class="nav-btn" data-target="page-contacts">
+          <i class="fas fa-phone nav-icon"></i>
+          <span class="nav-label">Call</span>
         </button>
-        <button class="nav-btn" data-target="page-emergency-updates">
-          <span class="nav-icon">((·))</span>
-          <span class="nav-label">Notification</span>
+        <button class="nav-btn" data-target="page-account">
+          <i class="fas fa-user-circle nav-icon"></i>
+          <span class="nav-label">Account</span>
         </button>
       </nav>
     </div>
@@ -679,16 +775,21 @@
       </main>
 
       <nav class="global-navbar">
+        <button class="nav-btn nav-active" data-target="page-dashboard">
+          <i class="fas fa-home nav-icon"></i>
+          <span class="nav-label">Home</span>
+        </button>
         <button class="nav-btn" data-target="page-safe-routes">
-          <span class="nav-icon">📍</span>
-          <span class="nav-label">Location</span>
+          <i class="fas fa-map-marked-alt nav-icon"></i>
+          <span class="nav-label">Map</span>
         </button>
-        <button class="nav-phone-btn">
-          <span class="nav-phone-icon">📞</span>
+        <button class="nav-btn" data-target="page-contacts">
+          <i class="fas fa-phone nav-icon"></i>
+          <span class="nav-label">Call</span>
         </button>
-        <button class="nav-btn nav-active" data-target="page-emergency-updates">
-          <span class="nav-icon">((·))</span>
-          <span class="nav-label">Notification</span>
+        <button class="nav-btn" data-target="page-account">
+          <i class="fas fa-user-circle nav-icon"></i>
+          <span class="nav-label">Account</span>
         </button>
       </nav>
     </div>

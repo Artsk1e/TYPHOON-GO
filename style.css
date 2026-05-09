@@ -428,207 +428,21 @@ html, body {
 
 .dash-body {
   flex: 1;
-  padding: 28px 20px 20px;
+  padding: 24px 20px 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 0;
   overflow-y: auto;
 }
 .dash-body::-webkit-scrollbar { display: none; }
 
-/* SOS Rescue button */
-.sos-rescue-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-height: 110px;
-  background: var(--red);
-  border: none;
-  border-radius: 18px;
-  cursor: pointer;
-  transition: transform 0.12s;
-  gap: 0;
-  position: relative;
-  overflow: hidden;
-}
-.sos-rescue-btn::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(255,255,255,0);
-  transition: background 0.15s;
-}
-.sos-rescue-btn:active { transform: scale(0.97); }
-.sos-rescue-btn:active::after { background: rgba(255,255,255,0.1); }
-
-.sos-text {
-  font-size: 42px;
-  font-weight: 900;
-  color: var(--white);
-  line-height: 1;
-  letter-spacing: 2px;
-}
-.rescue-text {
-  font-size: 32px;
-  font-weight: 900;
-  color: var(--white);
-  line-height: 1.1;
-  letter-spacing: 2px;
-}
-
-/* Action cards */
-.action-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.action-card {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  width: 100%;
-  background: var(--light-gray);
-  border: none;
-  border-radius: 16px;
-  padding: 22px 26px;
-  margin: 7px 0px;
-  min-height: 100px;
-  cursor: pointer;
-  text-align: left;
-  transition: background 0.15s, transform 0.1s;
-}
-.action-card:active { transform: scale(0.98); background: #c8c8c8; }
-
-.action-icon {
-  font-size: 42px;
-  flex-shrink: 0;
-}
-
-.action-label {
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--black);
-  line-height: 1.3;
-}
-
-/* ============================================================
-   GLOBAL NAVBAR
-   ============================================================ */
-.global-navbar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: var(--navbar-h);
-  background: var(--navbar-bg);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 10px 6px;
-  z-index: 100;
-  flex-shrink: 0;
-}
-
-.nav-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--white);
-  padding: 6px 40px;
-  border-radius: 8px;
-  transition: opacity 0.15s;
-}
-.nav-btn:active { opacity: 0.6; }
-
-.nav-icon {
-  font-size: 25px;
-  line-height: 1;
-  /* Override emoji color to white via filter for non-emoji fallback */
-}
-
-.nav-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--white);
-  font-family: var(--font);
-}
-
-.nav-btn.nav-active .nav-label { color: #aaa; }
-
-/* Center phone button */
-.nav-phone-btn {
-  position: absolute;
-  left: 50%;
-  bottom: 6px;
-  transform: translateX(-50%);
-  width: 85px;
-  height: 85px;
-  border-radius: 50%;
-  background: var(--red);
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 18px rgba(255,35,35,0.55);
-  flex-shrink: 0;
-  transition: transform 0.12s;
-}
-.nav-phone-btn:active { transform: translateX(-50%) scale(0.93); }
-
-.nav-phone-icon {
-  font-size: 35px;
-  filter: grayscale(1) brightness(10);
-}
-
-/* ============================================================
-   PAGE 4 — SOS RESCUE
-   ============================================================ */
-.sos-body {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow-y: auto;
-}
-.sos-body::-webkit-scrollbar { display: none; }
-
-/* Map background area */
-.sos-map-bg {
-  position: absolute;
-  inset: 0;
-  top: 57px;
-  width: 100%;
-  background: #e8edf0;
-  flex-shrink: 0;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
-}
-
-/* Semi-transparent overlay for SOS map */
-.sos-map-overlay {
-  position: absolute;
-  inset: 0;
-  top: 57px;
-  width: 100%;
-  background: rgba(255, 255, 255, 0.6);
-  pointer-events: none;
-  z-index: 2;
-}
-
+/* ── SOS Action Area ────────────────────────────────────────── */
 /* SOS circle button */
 .sos-circle-outer {
   width: 250px;
   height: 250px;
+  min-width: 250px;
+  min-height: 250px;
   border-radius: 50%;
   background: var(--red);
   border: none;
@@ -637,15 +451,15 @@ html, body {
   align-items: center;
   justify-content: center;
   box-shadow: 0 6px 32px rgba(255,35,35,0.5);
-  position: absolute;
+  position: relative;
   z-index: 10;
   transition: transform 0.12s;
   animation: sosPulse 2.4s ease-in-out infinite;
-  top: 45%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  margin: 0 auto;
+  margin-top: 20px;
+  flex-shrink: 0;
 }
-.sos-circle-outer:active { transform: translate(-50%, -50%) scale(0.95); }
+.sos-circle-outer:active { transform: scale(0.95); }
 
 @keyframes sosPulse {
   0%, 100% { box-shadow: 0 6px 32px rgba(255,35,35,0.5); }
@@ -662,9 +476,9 @@ html, body {
   justify-content: center;
 }
 
-.tap-icon { 
+.tap-icon {
   display: block;
-  font-size: 80px;  
+  font-size: 80px;
   color: var(--red);
   transition: opacity 0.15s, color 0.15s;
 }
@@ -681,259 +495,266 @@ html, body {
 
 /* SOS Button Label */
 .sos-button-label {
-  position: absolute;
-  bottom: 150px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 30px;
-  font-weight: 1000;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 900;
   color: var(--black);
   letter-spacing: 0.5px;
-  z-index: 10;
+  margin-top: 12px;
+  margin-bottom: 20px;
   white-space: nowrap;
 }
 
-/* SOS form area below map */
-.sos-form-area {
-  padding: 18px 24px 12px;
-  flex: 1;
-}
-
-.sos-tap-label {
-  font-size: 20px;
-  font-weight: 900;
-  text-align: center;
-  color: var(--black);
-  margin-bottom: 18px;
-  letter-spacing: 0.5px;
-}
-
-/* ============================================================
-   SOS SUBMITTED PAGE (Success confirmation after SOS)
-   ============================================================ */
-.sos-submitted-body {
+/* ── Featured Carousel ───────────────────────────────────────── */
+.featured-carousel-wrap {
+  flex: 10 0 auto;
+  margin-top: 10px;
+  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
-  height: calc(100% - var(--header-h) - var(--navbar-h));
-  padding: 0;
-  gap: 0;
+  gap: 12px;
 }
 
-.sos-submitted-map {
+.featured-carousel {
+  position: relative;
   width: 100%;
-  height: 70%;
-  flex-shrink: 0;
-  background: #dce8ef;
-  border-bottom: 1px solid var(--light-gray);
-  z-index: 1;
+  overflow: hidden;
+  border-radius: 18px;
+  background: var(--light-gray);
+  height: 220px;
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
 }
 
-.sos-success-message {
-  flex: 1;
+.carousel-slide {
+  position: relative;
+  flex: 0 0 100%;
+  min-width: 100%;
+  width: 100%;
+  height: 100%;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 24px;
-  text-align: center;
-  gap: 8px;
-}
-
-.sos-success-message p {
-  font-size: 28px;
-  font-weight: 900;
-  color: var(--black);
-  line-height: 1.4;
-  letter-spacing: -0.5px;
-  margin: 0;
-}
-
-.btn-back-dashboard {
-  align-self: center;
-  padding: 12px 32px;
-  background: var(--red);
-  color: var(--white);
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s;
-  margin-bottom: 24px;
-}
-
-.btn-back-dashboard:hover {
-  background: #ff3333;
-}
-
-.btn-back-dashboard:active {
-  background: #e01c1c;
-}
-
-/* Description textarea for SOS form */
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.form-group label {
-  font-size: 15px;
-  font-weight: 800;
-  color: var(--black);
-}
-
-#form-description {
-  width: 100%;
-  height: 80px;
-  border: 1px solid var(--light-gray);
-  border-radius: 8px;
   background: var(--white);
-  padding: 10px 12px;
-  font-family: var(--font);
-  font-size: 14px;
-  color: var(--dark-gray);
-  outline: none;
-  resize: none;
-  font-weight: 500;
-}
-
-#form-description::placeholder {
-  color: var(--mid-gray);
-  opacity: 70%;
-}
-
-#form-description:focus {
-  border-color: var(--red);
-  box-shadow: 0 0 8px rgba(255, 35, 35, 0.1);
-}
-
-/* ============================================================
-   CUSTOM CHECKBOXES
-   ============================================================ */
-.checkbox-group {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.custom-checkbox {
-  display: flex;
-  align-items: center;
-  gap: 14px;
   cursor: pointer;
-  user-select: none;
+  transition: transform 0.12s;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
-.custom-checkbox input[type="checkbox"] {
+.carousel-slide:active {
+  transform: scale(0.98);
+}
+
+.carousel-slide-img-wrap {
   display: none;
 }
 
-.checkmark {
-  width: 28px;
-  height: 28px;
-  border: 2.5px solid var(--dark-gray);
-  border-radius: 50%;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: border-color 0.18s, background 0.18s;
-}
-
-.custom-checkbox input:checked + .checkmark {
-  border-color: var(--black);
-  background: var(--white);
-}
-
-.custom-checkbox input:checked + .checkmark::after {
-  content: '';
+.carousel-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--black);
 }
 
-.chk-label {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--black);
-}
-
-/* ============================================================
-   PAGE 5 — SOS FORM
-   ============================================================ */
-.sos-form-field {
-  margin-bottom: 18px;
-}
-
-.sos-field-label {
-  font-size: 15px;
-  font-weight: 800;
-  color: var(--black);
-  margin-bottom: 2px;
-}
-
-.sos-field-input {
+.carousel-img-fallback {
   width: 100%;
-  border: none;
-  border-bottom: none;
-  background: transparent;
-  font-size: 16px;
-  font-family: var(--font);
-  color: var(--dark-gray);
-  padding: 4px 0;
-  outline: none;
-}
-
-.sos-field-input::placeholder {
-  color: rgb(153, 153, 153);
-  opacity: 60%;
-}
-
-.field-underline {
-  width: 100%;
-  height: 1.5px;
-  background: var(--dark-gray);
-  margin-top: 4px;
-}
-
-.form-checkboxes {
-  margin-top: 6px;
-  margin-bottom: 28px;
-}
-
-/* Location button */
-.btn-location {
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  width: 100%;
-  height: 56px;
-  background: var(--red);
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: transform 0.12s, background 0.15s;
-  margin-top: 4px;
+  background: rgba(255, 255, 255, 0.15);
 }
-.btn-location:active { transform: scale(0.97); background: #e01c1c; }
 
-.location-pin-icon { font-size: 20px; }
-
-.location-btn-text {
-  font-size: 20px;
-  font-weight: 900;
+.carousel-fallback-icon {
+  font-size: 48px;
   color: var(--white);
-  letter-spacing: 2px;
+  opacity: 0.7;
+}
+
+
+
+.carousel-slide-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.carousel-slide-title {
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.carousel-slide-sub {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.85;
+  margin: 0;
+}
+
+.carousel-arrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: var(--red);
+  opacity: 0.9;
+  z-index: 10;
+}
+
+/* Carousel dots */
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--light-gray);
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.carousel-dot.active {
+  background: var(--red);
+  transform: scale(1.3);
+}
+
+.carousel-dot:active {
+  transform: scale(1.1);
+}
+
+/* ── Resource Grid ──────────────────────────────────────────── */
+.resource-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  flex: 1;
+  margin-top: 20px;
+}
+
+.resource-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 12px;
+  background: var(--white);
+  border: 2.5px solid var(--light-gray);
+  border-radius: 18px;
+  padding-bottom: 0;
+  cursor: pointer;
+  transition: transform 0.12s, border-color 0.15s;
+  position: relative;
+  overflow: hidden;
+  height: 300px;
+}
+
+.resource-tile::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.15s;
+  pointer-events: none;
+}
+
+.resource-tile:active {
+  transform: scale(0.95);
+}
+
+.resource-tile:active::before {
+  background: rgba(0, 0, 0, 0.05);
+  opacity: 1;
+}
+
+.resource-tile-img-wrap {
+  width: 100%;
+  height: 50%;
+  overflow: hidden;
+  background: var(--light-gray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.resource-tile-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.resource-tile-title {
+  text-align: left;
+  margin: 0;
+  padding: 12px 12px 0 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--black);
+}
+
+.resource-tile-description {
+  text-align: left;
+  margin: 0;
+  padding: 0 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--black);
+}
+
+.resource-tile-subtitle {
+  text-align: left;
+  margin: 0;
+  padding: 0 12px 12px 12px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--black);
 }
 
 /* ============================================================
-   PAGE 7 — EVACUATION CENTERS
-   ============================================================ */
+    GLOBAL NAVBAR
+    ============================================================ */
+.global-navbar {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: var(--navbar-h);
+  background: var(--white);
+  border-top: 1.5px solid #e8e8e8;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 8px;
+  z-index: 100;
+}
+.nav-btn {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 3px; padding: 8px 4px;
+  color: #888888;
+  transition: color 0.15s;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.nav-icon { font-size: 20px; }
+.nav-label { font-size: 10px; font-weight: 700; }
+.nav-btn.nav-active { color: var(--red); }
+.nav-btn:hover { color: var(--red); }
+
+/* ============================================================
+    PAGE 7 — EVACUATION CENTERS
+    ============================================================ */
 
 /* Search bar */
 .search-bar-wrap {
@@ -1261,6 +1082,122 @@ html, body {
   line-height: 1.55;
   text-align: justify;
 }
+
+/* ============================================================
+   PAGE — CONTACTS
+   ============================================================ */
+.contacts-body { gap: 12px; }
+.contacts-section-label { font-size: 11px; font-weight: 800; color: #888888; letter-spacing: 0.8px; text-transform: uppercase; }
+.recent-calls-carousel {
+  display: flex; gap: 10px; overflow-x: auto; padding-bottom: 2px;
+  -ms-overflow-style: none; scrollbar-width: none;
+}
+.recent-calls-carousel::-webkit-scrollbar { display: none; }
+.recent-call-card {
+  flex-shrink: 0; width: 72px;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  cursor: pointer;
+}
+.recent-call-avatar {
+  width: 52px; height: 52px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 20px; font-weight: 900;
+}
+.recent-call-name { font-size: 11px; font-weight: 700; color: var(--black); }
+.recent-call-time { font-size: 10px; color: #888888; font-weight: 600; }
+
+.contact-alpha-divider {
+  font-size: 12px; font-weight: 900; color: var(--red);
+  padding: 6px 0 2px;
+  letter-spacing: 0.5px;
+}
+.contact-row {
+  background: var(--white); border-radius: 8px;
+  border: 1.5px solid #e8e8e8; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  padding: 10px 12px;
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 4px; cursor: pointer;
+}
+.contact-avatar {
+  width: 42px; height: 42px; border-radius: 50%;
+  color: white; font-size: 18px; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.contact-info { flex: 1; min-width: 0; }
+.contact-name { display: block; font-size: 14px; font-weight: 800; color: var(--black); }
+.contact-rel  { display: block; font-size: 11px; color: #888888; font-weight: 600; }
+.contact-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.contact-action-btn {
+  width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; border: none; cursor: pointer;
+}
+.contact-call { background: rgba(39,174,96,0.12); color: #27ae60; }
+.contact-sms  { background: rgba(41,128,185,0.12); color: #2980b9; }
+
+/* ============================================================
+    PAGE — ACCOUNT
+    ============================================================ */
+.account-body { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+.account-profile-header {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 24px 20px 20px;
+  text-align: center;
+}
+.account-avatar-wrap { position: relative; margin-bottom: 12px; }
+.account-profile-img {
+  width: 90px; height: 90px; border-radius: 50%; object-fit: cover;
+  border: 3px solid var(--red);
+}
+.account-avatar-fallback {
+  width: 90px; height: 90px; border-radius: 50%;
+  background: var(--red); color: white;
+  font-size: 36px; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  border: 3px solid var(--red);
+}
+img[src=""]:not([src]) + .account-avatar-fallback,
+img[src=""] + .account-avatar-fallback { display: flex; }
+img:not([src=""]) + .account-avatar-fallback { display: none; }
+
+.account-edit-avatar-btn {
+  position: absolute; bottom: 2px; right: 2px;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--red); color: white; font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  border: none; cursor: pointer;
+}
+.account-welcome { font-size: 13px; color: #888888; font-weight: 600; }
+.account-name    { font-size: 18px; font-weight: 900; color: var(--black); margin: 2px 0; }
+.account-email   { font-size: 12px; color: #888888; font-weight: 600; }
+
+.account-menu { padding: 8px 20px; display: flex; flex-direction: column; gap: 2px; }
+.account-menu-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 15px 14px; border-radius: 8px;
+  font-size: 14px; font-weight: 700; color: var(--black);
+  cursor: default;
+  transition: background 0.15s;
+}
+.account-menu-item:hover { background: #f5f5f5; }
+.account-menu-icon { font-size: 18px; color: #888888; width: 20px; text-align: center; flex-shrink: 0; }
+.account-menu-chevron { margin-left: auto; font-size: 12px; color: #888888; }
+
+.account-logout-wrap { padding: 8px 20px 24px; }
+.btn-logout {
+  width: 100%; height: 50px;
+  border-radius: 12px;
+  border: 2px solid var(--red);
+  color: var(--red);
+  font-size: 15px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: background 0.15s;
+  background: none;
+  cursor: pointer;
+}
+.btn-logout:hover { background: #ffe8e8; }
 
 /* ============================================================
    UTILITIES
