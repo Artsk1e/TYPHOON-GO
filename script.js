@@ -372,11 +372,6 @@ function showToast(message, success = false) {
 }
 
 
-// ── Hamburger Menu (Dashboard) ───────────────────────────────
-
-document.getElementById('btn-hamburger').addEventListener('click', () => {
-  showToast('Menu coming soon!');
-});
 
 // ── Account Page Logout ──────────────────────────────────────
 
@@ -462,7 +457,116 @@ function addContactToCarousel(contact) {
   carousel.insertBefore(newCard, carousel.firstChild);
 }
 
-// ── Init ─────────────────────────────────────────────────────
+// ── Go-Bag Checklist — Gamified Logic ────────────────────────
+
+(function initGoBagChecklist() {
+  const checkboxes     = document.querySelectorAll('.gobag-checkbox');
+  const progressFill   = document.getElementById('gobag-progress-fill');
+  const percentText    = document.getElementById('gobag-percent');
+  const itemsCountText = document.getElementById('gobag-items-count');
+  const statusLabel    = document.getElementById('gobag-status-label');
+  const statusText     = document.getElementById('gobag-status-text');
+  const overlay        = document.getElementById('gobag-milestone-overlay');
+  const milestoneIcon  = document.getElementById('gobag-milestone-icon');
+  const milestoneTitle = document.getElementById('gobag-milestone-title');
+  const milestoneMsg   = document.getElementById('gobag-milestone-msg');
+  const milestoneBtn   = document.getElementById('gobag-milestone-btn');
+
+  if (!checkboxes.length) return;
+
+  const TOTAL = checkboxes.length; // 15 items
+
+  // Track which milestones have already triggered
+  const triggered = { 25: false, 50: false, 75: false, 100: false };
+
+  const MILESTONES = {
+    25: {
+      icon: '🎒',
+      title: 'Off to a great start!',
+      msg: 'You\'ve packed 25% of your go-bag. Keep it up — every item could save your life.'
+    },
+    50: {
+      icon: '⚡',
+      title: 'Halfway there!',
+      msg: 'Your bag is half-full. You\'re more prepared than most. Don\'t stop now!'
+    },
+    75: {
+      icon: '🔥',
+      title: 'Almost ready!',
+      msg: 'Just a few more items and your go-bag will be storm-ready. You\'ve got this!'
+    },
+    100: {
+      icon: '🏅',
+      title: 'FULLY PACKED!',
+      msg: 'Your go-bag is 100% complete. You are prepared and ready for any emergency. Stay safe!'
+    }
+  };
+
+  function updateChecklist() {
+    const checked = document.querySelectorAll('.gobag-checkbox:checked').length;
+    const pct     = Math.round((checked / TOTAL) * 100);
+
+    // Update progress bar
+    progressFill.style.width = pct + '%';
+    percentText.textContent  = pct + '%';
+    itemsCountText.textContent = `${checked} / ${TOTAL} items packed`;
+
+
+    // Update status label
+    statusLabel.className = 'gobag-status-label';
+    if (pct === 0) {
+      statusText.textContent = 'Not Started';
+    } else if (pct < 50) {
+      statusLabel.classList.add('status-in-progress');
+      statusText.textContent = 'In Progress';
+    } else if (pct < 100) {
+      statusLabel.classList.add('status-almost');
+      statusText.textContent = 'Almost Ready!';
+    } else {
+      statusLabel.classList.add('status-ready');
+      statusText.textContent = '✓ Fully Packed!';
+    }
+
+    // Check milestones
+    [25, 50, 75, 100].forEach(threshold => {
+      if (pct >= threshold && !triggered[threshold]) {
+        triggered[threshold] = true;
+        showMilestone(threshold);
+      }
+      // Reset trigger if user un-checks below threshold
+      if (pct < threshold) {
+        triggered[threshold] = false;
+      }
+    });
+  }
+
+  function showMilestone(threshold) {
+    const m = MILESTONES[threshold];
+    milestoneIcon.textContent  = m.icon;
+    milestoneTitle.textContent = m.title;
+    milestoneMsg.textContent   = m.msg;
+    overlay.classList.add('active');
+  }
+
+  // Dismiss milestone popup
+  milestoneBtn.addEventListener('click', () => {
+    overlay.classList.remove('active');
+  });
+
+  // Wire each checkbox
+  checkboxes.forEach(cb => {
+    cb.addEventListener('change', () => {
+      // Toggle checked visual on the parent label
+      const label = cb.closest('.check-item');
+      if (label) {
+        label.classList.toggle('item-checked', cb.checked);
+      }
+      updateChecklist();
+    });
+  });
+})();
+
+
 
 // Ensure only login page shows on load (already set via .active in HTML)
 // Verify correct initial state
@@ -478,4 +582,145 @@ window.addEventListener('DOMContentLoaded', () => {
       updateNavbarActive(activePage.id);
     }
   }
+});
+
+// ============================================================
+// CHAT & MESSAGING LOGIC
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+  
+  // 1. Smart Routing to Chat Page (Updates Header & Avatar dynamically)
+  document.addEventListener('click', (e) => {
+    
+    // Check if we clicked an SMS button OR a Recent Call card
+    const smsBtn = e.target.closest('.contact-sms');
+    const callCard = e.target.closest('.recent-call-card');
+    
+    let targetName = null;
+    let targetBgColor = 'var(--red)'; // default fallback
+
+    // If we clicked the SMS button in the contact list
+    if (smsBtn) {
+      targetName = smsBtn.getAttribute('data-contact');
+      // Try to get the avatar color from the same row
+      const row = smsBtn.closest('.contact-row');
+      if (row) {
+        const avatar = row.querySelector('.contact-avatar');
+        if (avatar) targetBgColor = avatar.style.backgroundColor || targetBgColor;
+      }
+    } 
+    // If we clicked the Recent Call card at the top
+    else if (callCard) {
+      targetName = callCard.getAttribute('data-contact');
+      const avatar = callCard.querySelector('.recent-call-avatar');
+      if (avatar) targetBgColor = avatar.style.backgroundColor || targetBgColor;
+    }
+
+    // If a valid contact was clicked, update the UI and navigate
+    if (targetName) {
+      // 1. Update the Header Name and Empty State Name
+      document.getElementById('msg-header-name').textContent = targetName;
+      document.getElementById('msg-empty-name').textContent = targetName;
+
+      // 2. Update the Avatars (Initial letter + Background Color)
+      const initial = targetName.charAt(0).toUpperCase();
+      const headerAvatar = document.getElementById('msg-header-avatar');
+      const emptyAvatar = document.getElementById('msg-empty-avatar');
+
+      headerAvatar.textContent = initial;
+      headerAvatar.style.backgroundColor = targetBgColor;
+      
+      emptyAvatar.textContent = initial;
+      // Optional: Give the empty state avatar a faded version of the color or keep it default
+
+      // 3. Reset the chat layout so it's clean for the new contact
+      document.getElementById('msg-chat-list').innerHTML = ''; // Clear old messages
+      
+      const emptyState = document.getElementById('msg-empty-state');
+      const quickChats = document.getElementById('msg-quick-chats');
+      
+      if (emptyState) emptyState.style.display = 'flex'; // Show empty state
+      if (quickChats) quickChats.style.display = 'flex'; // Show quick actions
+
+      // 4. Finally, navigate to the page
+      if (typeof navigateTo === 'function') {
+        navigateTo('page-message');
+      }
+    }
+  });
+
+  // 2. Chat Mechanics
+  const msgInput = document.getElementById('msg-input');
+  const msgSendBtn = document.getElementById('msg-send-btn');
+  const msgChatList = document.getElementById('msg-chat-list');
+  const msgBody = document.getElementById('msg-body');
+  const emptyState = document.getElementById('msg-empty-state');
+  const quickChats = document.getElementById('msg-quick-chats');
+
+  // Function to create and append a chat bubble
+  function addMessage(text, isOutgoing = true, isUrgent = false) {
+    if (!text.trim()) return; // Don't send empty messages
+
+    // Hide empty states on first message
+    if (emptyState) emptyState.style.display = 'none';
+    if (quickChats) quickChats.style.display = 'none';
+
+    // Create message wrapper
+    const wrap = document.createElement('div');
+    wrap.className = `msg-bubble-wrap ${isOutgoing ? 'outgoing' : 'incoming'}`;
+    
+    // Create bubble
+    const bubble = document.createElement('div');
+    bubble.className = `msg-bubble ${isUrgent ? 'urgent' : ''}`;
+    bubble.textContent = text;
+
+    wrap.appendChild(bubble);
+    msgChatList.appendChild(wrap);
+
+    // Auto-scroll to the bottom of the chat
+    msgBody.scrollTop = msgBody.scrollHeight;
+  }
+
+  // Send via the Send Button
+  if (msgSendBtn && msgInput) {
+    msgSendBtn.addEventListener('click', () => {
+      addMessage(msgInput.value);
+      msgInput.value = ''; // Clear input
+    });
+
+    // Send via the Enter Key
+    msgInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        addMessage(msgInput.value);
+        msgInput.value = '';
+      }
+    });
+  }
+
+  // Send via Quick Chat Buttons
+  const quickBtns = document.querySelectorAll('.msg-quick-btn');
+  quickBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const isUrgent = btn.classList.contains('msg-quick-urgent');
+      addMessage(btn.getAttribute('data-msg'), true, isUrgent);
+    });
+  });
+
+  // 3. Header Dropdown Menu Toggle
+  const menuToggle = document.getElementById('msg-menu-toggle');
+  const msgDropdown = document.getElementById('msg-dropdown');
+  
+  if (menuToggle && msgDropdown) {
+    menuToggle.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent closing immediately
+      msgDropdown.style.display = msgDropdown.style.display === 'none' ? 'block' : 'none';
+    });
+
+    // Close dropdown when clicking anywhere else on the screen
+    document.addEventListener('click', () => {
+      msgDropdown.style.display = 'none';
+    });
+  }
+
 });
