@@ -205,7 +205,7 @@
 
         <!-- 3. Resource Grid (2x2) -->
         <div class="resource-grid">
-          <button class="resource-tile" id="btn-gobag">
+          <button class="resource-tile" id="btn-gobag" data-target="page-go-bag-checklist">
             <div class="resource-tile-img-wrap" id="gobag-img">
               <img src="gobagchecklist.png" alt="Go-Bag Checklist" class="resource-tile-img" />
             </div>
@@ -264,6 +264,195 @@
       </nav>
     </div>
 
+    <!-- ========================================================== -->
+    <!-- GO BAG CHECKLIST-->
+    <!-- ========================================================== -->
+
+    <div id="page-go-bag-checklist" class="page has-navbar">
+       <header class="inner-header">
+        <button class="btn-back" data-target="page-dashboard">&#8592;</button>
+        <div class="header-logo-mixed">
+          <span class="logo-typhoon-sm">Go-Bag</span>
+          <span class="logo-go-sm">Checklist</span>
+        </div>
+      </header>
+      <div class="inner-divider"></div>
+
+      <main class="inner-body">  
+        <img src="gobagchecklistbanner.png" alt="Go-Bag Checklist" class="checklist-image" />
+        <div class="progress-section">
+    <div class="progress-header">
+      <div class="progress-title">
+        <h3>Typhoon Go Bag</h3>
+        <p>Essentials for one person</p>
+      </div>
+      <span class="badge-person">1 person</span>
+    </div>
+    <div class="progress-bar-container">
+      <div class="progress-bar-fill" style="width: 28%;"></div>
+      <span class="progress-percentage">28%</span>
+    </div>
+  </div>
+
+  <section class="checklist-group">
+    <h4 class="group-title">WATER & FOOD</h4>
+    
+    <label class="check-item">
+      <input type="checkbox">
+      <div class="item-text">
+        <strong>Drinking water (1.5L-2L)</strong>
+        <span>stored in a durable, reusable bottle</span>
+      </div>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <div class="item-text">
+        <strong>Non-perishable food (canned goods, instant rice)</strong>
+        <span>3-day supply</span>
+      </div>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <div class="item-text">
+        <strong>Manual Can Opener</strong>
+        <span>Small, folding type to save space</span>
+      </div>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <div class="item-text">
+        <strong>Compact Mess Kit</strong>
+        <span>1 spoon, 1 fork, and a collapsible cup</span>
+      </div>
+    </label>
+    
+    </section>
+
+  <section class="checklist-group">
+    <h4 class="group-title">FIRST AID & MEDICINE</h4>
+    
+    <label class="check-item">
+      <input type="checkbox">
+      <div class="item-text">
+        <strong>First Aid Kit</strong>
+        <span>Bandages, antiseptic, gauze, and scissors</span>
+      </div>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <div class="item-text">
+        <strong>Prescription Medications</strong>
+        <span>At least a 7-day supply</span>
+      </div>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <div class="item-text">
+        <strong>Over-the-Counter Medications</strong>
+        <span>Paracetamol, Ibuprofen, and Diarrhea medication</span>
+      </div>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <div class="item-text">
+        <strong>Alcohol & Sanitizer</strong>
+        <span>For cleaning hands and small wounds</span>
+      </div>
+    </label>
+  </section>
+
+  <section class="checklist-group">
+    <h4 class="group-title">TOOLS & EMERGENCY SUPPLIES</h4>
+    
+    <label class="check-item">
+      <input type="checkbox">
+      <div class="item-text">
+        <strong>Flashlight</strong>
+        <span>Waterproof preffered, with extra set of batteries</span>
+      </div>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <div class="item-text">
+        <strong>Whistle</strong>
+        <span>To signal for help in case of emergency</span>
+      </div>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <div class="item-text">
+        <strong>Power Bank</strong>
+        <span>Fully charged, with cables for all household phones</span>
+      </div>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <div class="item-text">
+        <strong>Rain Gear</strong>
+        <span>A lightweight, foldable poncho or compact umbrella</span>
+      </div>
+    </label>
+  </section>
+
+  <section class="checklist-group">
+    <h4 class="group-title">ESSENTIALS & IDENTITY</h4>
+    <label class="check-item">
+      <input type="checkbox">
+      <div class="item-text">
+        <strong>Waterproof Pouch</strong>
+        <span>Containing copies of your ID and important documents</span>
+      </div>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <div class="item-text">
+        <strong>Emergency Cash</strong>
+        <span>Small bills and coins</span>
+      </div>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <div class="item-text">
+        <strong>Extra Clothing</strong>
+        <span>1 set of dry clothes and socks, vacuum sealed to save space</span>
+      </div>
+    </label>
+  </section>  
+      </main>
+
+      <nav class="global-navbar">
+        <button class="nav-btn nav-active" data-target="page-dashboard">
+          <i class="fas fa-home nav-icon"></i>
+          <span class="nav-label">Home</span>
+        </button>
+        <button class="nav-btn" data-target="page-safe-routes">
+          <i class="fas fa-map-marked-alt nav-icon"></i>
+          <span class="nav-label">Map</span>
+        </button>
+        <button class="nav-btn" data-target="page-contacts">
+          <i class="fas fa-phone nav-icon"></i>
+          <span class="nav-label">Call</span>
+        </button>
+        <button class="nav-btn" data-target="page-account">
+          <i class="fas fa-user-circle nav-icon"></i>
+          <span class="nav-label">Account</span>
+        </button>
+
+    </div>
+
+
+    
 
 
     <!-- ========================================================== -->
@@ -420,6 +609,7 @@
           </div>
         </div>
 
+        <div class="separate-line"></div>
         <!-- Alphabetical Contact List -->
         <div class="contact-list" id="contact-list">
           <div class="contact-alpha-divider">B</div>
@@ -488,6 +678,47 @@
           </div>
         </div>
       </main>
+
+      <!-- Add Contact Button -->
+      <button class="btn-add-contact" id="btn-add-contact" title="Add Contact">
+        <i class="fas fa-plus"></i>
+      </button>
+
+      <!-- Add Contact Modal -->
+      <div class="modal-overlay" id="add-contact-modal-overlay">
+        <div class="modal-container">
+          <button class="modal-close-btn" id="btn-close-add-contact" type="button">&times;</button>
+          <h2 class="modal-title">Add Contact</h2>
+
+          <form class="add-contact-form" id="add-contact-form">
+            <div class="form-group">
+              <label class="field-label" for="new-contact-name">NAME</label>
+              <input
+                class="field-input"
+                id="new-contact-name"
+                type="text"
+                placeholder="e.g., John Smith"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="field-label" for="new-contact-phone">PHONE NUMBER</label>
+              <div class="phone-input-wrap"> 
+                <input
+                  class="field-input phone-input"
+                  id="new-contact-phone"
+                  type="tel"
+                  placeholder="e.g., 0917 123 4567"
+                  required
+                />
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary btn-save-contact">Save Contact</button>
+          </form>
+        </div>
+      </div>
 
       <nav class="global-navbar">
         <button class="nav-btn nav-active" data-target="page-dashboard">

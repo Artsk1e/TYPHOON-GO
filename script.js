@@ -385,6 +385,83 @@ document.getElementById('btn-logout').addEventListener('click', () => {
   setTimeout(() => navigateTo('page-login'), 1200);
 });
 
+// ── Add Contact Modal ────────────────────────────────────────
+
+const addContactModal = document.getElementById('add-contact-modal-overlay');
+const btnAddContact = document.getElementById('btn-add-contact');
+const btnCloseAddContact = document.getElementById('btn-close-add-contact');
+const addContactForm = document.getElementById('add-contact-form');
+
+// Open modal
+btnAddContact.addEventListener('click', () => {
+  addContactModal.classList.add('active');
+});
+
+// Close modal
+btnCloseAddContact.addEventListener('click', () => {
+  addContactModal.classList.remove('active');
+});
+
+// Close modal when clicking overlay
+addContactModal.addEventListener('click', (e) => {
+  if (e.target === addContactModal) {
+    addContactModal.classList.remove('active');
+  }
+});
+
+// Handle form submission
+addContactForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById('new-contact-name').value.trim();
+  const phone = document.getElementById('new-contact-phone').value.trim();
+
+  if (!name || !phone) {
+    showToast('Please fill in all fields.');
+    return;
+  }
+
+  // Create contact object (you can save to localStorage or send to backend)
+  const newContact = {
+    name: name,
+    phone: '+63' + phone,
+    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  };
+
+  // For now, just show a success toast
+  showToast(`Contact "${name}" added successfully!`, true);
+
+  // Reset form
+  addContactForm.reset();
+
+  // Close modal
+  addContactModal.classList.remove('active');
+
+  // Optional: Add contact to recent calls carousel
+  addContactToCarousel(newContact);
+});
+
+// Helper function to add contact to recent calls carousel
+function addContactToCarousel(contact) {
+  const carousel = document.getElementById('recent-calls-carousel');
+  if (!carousel) return;
+
+  // Create avatar color (random or based on name)
+  const colors = ['#e74c3c', '#2980b9', '#8e44ad', '#e67e22', '#27ae60', '#1abc9c'];
+  const randomColor = colors[Math.floor(Math.random() * colors.length)];
+  const initials = contact.name.charAt(0).toUpperCase();
+
+  const newCard = document.createElement('div');
+  newCard.className = 'recent-call-card';
+  newCard.innerHTML = `
+    <div class="recent-call-avatar" style="background: ${randomColor};">${initials}</div>
+    <span class="recent-call-name">${contact.name.split(' ')[0]}</span>
+    <span class="recent-call-time">just now</span>
+  `;
+
+  carousel.insertBefore(newCard, carousel.firstChild);
+}
+
 // ── Init ─────────────────────────────────────────────────────
 
 // Ensure only login page shows on load (already set via .active in HTML)
