@@ -25,6 +25,7 @@
   --orange:     #FF851B;
   --navbar-bg:  #1C1C1C;
   --card-border: #1A1A1A;
+  --background: #fffefe;
 
   --font: 'Nunito', sans-serif;
 
@@ -63,7 +64,7 @@ html, body {
     height: 100dvh;
     box-shadow: none;
   }
-  html, body { background: var(--white); }
+  html, body { background: var(--background); }
 }
 
 /* ── Page system ───────────────────────────────────────────── */
@@ -74,7 +75,7 @@ html, body {
   height: 100%;
   display: none;
   flex-direction: column;
-  background: var(--white);
+  background: var(--background);
   overflow-y: auto;
   overflow-x: hidden;
   /* Hide scrollbar */
@@ -109,7 +110,7 @@ html, body {
   justify-content: center;
   height: var(--header-h);
   padding: 0 16px;
-  background: var(--white);
+  background: var(--background);
   flex-shrink: 0;
   position: relative;
 }
@@ -441,6 +442,20 @@ html, body {
   overflow-y: auto;
 }
 .dash-body::-webkit-scrollbar { display: none; }
+/* Weather Banner */
+.weather-banner{
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  object-position: center;
+  margin-top: -40px;
+  border-radius: 18px;
+  display: block;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px
+}
+
 
 /* ── SOS Action Area ────────────────────────────────────────── */
 /* SOS circle button */
@@ -461,7 +476,7 @@ html, body {
   z-index: 10;
   transition: transform 0.12s;
   animation: sosPulse 2.4s ease-in-out infinite;
-  margin: 0 auto;
+  margin: 20px auto;
   margin-top: 20px;
   flex-shrink: 0;
 }
@@ -1283,6 +1298,175 @@ img[src="userprofile.png"] + .account-avatar-fallback {
   cursor: pointer;
 }
 .btn-logout:hover { background: #ffe8e8; }
+
+/* ============================================================
+   PAGE 8 — TYPHOON SAFETY TIPS
+   ============================================================ */
+
+.tips-banner-image {
+  width: 105%;
+  height: 150px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  border-radius: 18px;
+  margin-bottom: -20px;
+  margin-top: -40px;
+  margin-left: -5px;
+}
+
+.typhoon-tips-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.tips-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--black);
+  text-align: left;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+.tips-description {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dark-gray);
+  line-height: 1.6;
+  text-align: left;
+  margin-bottom: 24px;
+}
+
+.tips-section {
+  margin-bottom: 20px;
+}
+
+.tips-section-title {
+  font-size: 18px;
+  font-weight: 1000;
+  color: var(--black);
+  text-align: left;
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+
+.tips-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tips-list li {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--black);
+  text-align: left;
+  line-height: 1.5;
+  padding-left: 24px;
+  position: relative;
+}
+
+.tips-list li::before {
+  content: '•';
+  position: absolute;
+  left: 8px;
+  color: var(--black);
+  font-weight: 900;
+  font-size: 16px;
+}
+
+.separate-line {
+  height: 1px;
+  background: #e8e8e8;
+  margin: 20px 0;
+}
+
+/* ============================================================
+   PAGE 9 — FIRST AID & SURVIVAL GUIDE
+   ============================================================ */
+
+.first-aid-banner-image {
+  width: 105%;
+  height: 150px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  border-radius: 18px;
+  margin-bottom: -10px;
+  margin-top: -40px;
+  margin-left: -5px;
+}
+
+.first-aid-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.first-aid-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--black);
+  text-align: left;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+.first-aid-description {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--black);
+  line-height: 1.6;
+  text-align: left;
+  margin-bottom: 24px;
+  margin-top: 0;
+}
+
+.first-aid-section {
+  margin-bottom: 20px;
+}
+
+.first-aid-section-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--black);
+  text-align: left;
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+
+.first-aid-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.first-aid-list li {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--black);
+  text-align: left;
+  line-height: 1.5;
+  padding-left: 24px;
+  position: relative;
+}
+
+.first-aid-list li::before {
+  content: '•';
+  position: absolute;
+  left: 8px;
+  color: var(--black);
+  font-weight: 900;
+  font-size: 16px;
+}
 
 /* ============================================================
    UTILITIES
