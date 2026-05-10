@@ -1,450 +1,272 @@
-# TyphoonGo Dashboard - Implementation Notes for Developers
+# Typhoon GO — Developer Implementation Notes
 
-## Overview
-The TyphoonGo dashboard has been completely refactored with a modern, clean layout. This document provides implementation notes for developers working with the new components.
-
-## Architecture Overview
-
-### Dashboard Structure
-```
-Dashboard Page (.page-dashboard)
-├── Header (unchanged)
-│   ├── Hamburger Menu
-│   ├── Logo (TYPHOON GO)
-│   └── Avatar
-├── Body (.dash-body)
-│   ├── SOS Action Area
-│   ├── Featured Carousel
-│   └── Resource Grid
-└── Navigation Bar (.global-navbar)
-    ├── Left Button (Map)
-    ├── Center Button (Phone)
-    └── Right Button (Notifications)
-```
-
-## Component Details
-
-### 1. SOS Action Area
-
-**Location:** Dashboard → SOS Action Area  
-**Purpose:** Quick emergency response trigger
-
-**Structure:**
-```html
-<div class="sos-action-area">
-  <button id="btn-sos-rescue" class="sos-pulse-btn">
-    <div class="sos-pulse-ring sos-ring-1"></div>
-    <div class="sos-pulse-ring sos-ring-2"></div>
-    <div class="sos-circle-core">
-      <i class="fas fa-exclamation sos-icon"></i>
-      <span class="sos-label">SOS</span>
-    </div>
-  </button>
-  <p class="sos-hint-text">Tap to send emergency rescue</p>
-</div>
-```
-
-**Current Behavior:**
-- Shows toast notification: "Emergency SOS activated! Help is being dispatched."
-- TODO: Integrate with backend SOS API
-- TODO: Add geo-location capture
-- TODO: Add sound effect
-
-**CSS Variables Used:**
-- `--red`: Button color (#FF2323)
-- `--red` (opacity): Pulse ring color
-
-**Animation Details:**
-- Pulse Ring 1: 2s ease-out infinite (starts immediately)
-- Pulse Ring 2: 2s ease-out infinite (0.7s delay)
-- Scale: 1 → 1.3 over 2 seconds with fade-out
-
-**JavaScript Events:**
-```javascript
-document.getElementById('btn-sos-rescue').addEventListener('click', () => {
-  showToast('Emergency SOS activated! Help is being dispatched.');
-});
-```
+**Audience:** Engineers onboarding to the Typhoon GO codebase, or any developer extending or maintaining the application.  
+**Purpose:** Documents the non-obvious architectural and design decisions embedded in the codebase — the "why" behind choices that might otherwise seem unorthodox.
 
 ---
 
-### 2. Featured Carousel
+## 1. Architectural Philosophy
 
-**Location:** Dashboard → Featured Carousel Wrap  
-**Purpose:** Display featured guides and educational content
+Typhoon GO is built on a deliberate **zero-build, zero-framework constraint**. This is not a limitation — it is a design requirement. The application must be:
 
-**Structure:**
-```html
-<div class="featured-carousel-wrap">
-  <div class="featured-carousel" id="featured-carousel">
-    <div class="carousel-slide" id="carousel-slide-0">
-      <div class="carousel-slide-img-wrap">
-        <img src="" alt="..." class="carousel-img carousel-img-storm" />
-        <div class="carousel-img-fallback">
-          <i class="fas fa-house-damage carousel-fallback-icon"></i>
-        </div>
-      </div>
-      <div class="carousel-slide-text">
-        <p class="carousel-slide-eyebrow">FEATURED GUIDE</p>
-        <h3 class="carousel-slide-title">Typhoon Safety Guide</h3>
-        <p class="carousel-slide-sub">Tap to read essential tips</p>
-      </div>
-      <i class="fas fa-chevron-right carousel-arrow"></i>
-    </div>
-    <!-- Additional slides... -->
-  </div>
-  <div class="carousel-dots">
-    <span class="carousel-dot active" data-index="0"></span>
-    <span class="carousel-dot" data-index="1"></span>
-  </div>
-</div>
-```
+1. **Deployable without a build pipeline.** No `npm install`, no Webpack, no Babel transpilation. The three source files (`index.html`, `style.css`, `script.js`) are the production artifact.
+2. **Operable in degraded network conditions.** In a typhoon scenario, mobile data is unreliable. The SPA model ensures all UI is delivered in a single initial page load with no subsequent navigation-triggered network requests. CDN assets (Leaflet, Font Awesome, Nunito) are the only network dependencies after first load, and they are cacheable.
+3. **Maintainable by a single developer or small team.** The file structure is intentionally flat. Any developer with HTML/CSS/JS knowledge can open `index.html` in a browser and immediately understand the application structure.
 
-**Features:**
-- ✅ Auto-rotation: 5 seconds per slide
-- ✅ Manual navigation: Click carousel dots
-- ✅ Touch support: Swipe left/right
-- ✅ Smooth transitions: 0.5s cubic-bezier
-- ✅ Fallback icons: When images unavailable
+The architectural pattern is **All-Pages-in-DOM SPA**: all pages exist simultaneously as `position: absolute` divs within `#app-wrapper`. Navigation is CSS `display` toggling, not URL routing. There is no history API integration, no hash routing, and no server-side rendering.
 
-**JavaScript Implementation:**
-```javascript
-let currentSlide = 0;
-const carousel = document.getElementById('featured-carousel');
-const carouselDots = document.querySelectorAll('.carousel-dot');
+---
 
-function showSlide(index) {
-  carousel.style.transform = `translateX(-${index * 100}%)`;
-  carouselDots.forEach((dot, i) => {
-    dot.classList.toggle('active', i === index);
-  });
-  currentSlide = index;
+## 2. Why `box-shadow` Instead of `border` for Focus States
+
+**The rule:** All focus/ring indicators in Typhoon GO use `box-shadow`, never `border`.
+
+```css
+/* Correct — does not affect layout */
+.field-input:focus {
+  box-shadow: 0 0 0 2.5px var(--red);
 }
 
-// Auto-rotate
-setInterval(() => {
-  const nextSlide = (currentSlide + 1) % 2;
-  showSlide(nextSlide);
-}, 5000);
-
-// Touch support
-carousel.addEventListener('touchstart', (e) => {
-  touchStartX = e.changedTouches[0].screenX;
-});
-
-carousel.addEventListener('touchend', (e) => {
-  touchEndX = e.changedTouches[0].screenX;
-  handleSwipe();
-});
+/* Incorrect — would cause layout jitter */
+.field-input:focus {
+  border: 2.5px solid var(--red);
+}
 ```
 
-**To Add New Slides:**
-1. Add new `carousel-slide` div with id `carousel-slide-N`
-2. Add new `carousel-dot` with data-index matching slide number
-3. Update the modulo operator in auto-rotate: `% 2` → `% N`
+**Why this matters:**
 
-**To Add Images:**
-Replace empty `src=""` attributes with actual image paths:
+CSS `border` is part of the **box model**. Adding or changing a `border` on focus changes the element's computed size (unless `box-sizing: border-box` absorbs it perfectly, which requires the element to have a fixed height and no pre-existing border that changes).
+
+When `.field-input` has `border: none` at rest and then receives `border: 2.5px solid` on focus, the browser must:
+1. Recalculate the element's box model.
+2. Reflow any adjacent elements affected by the size change.
+3. Repaint the changed area.
+
+On mobile with a list of form inputs stacked vertically, this reflow is visible as a micro-jitter — a subtle layout shift that degrades the polish of the interaction.
+
+`box-shadow`, by contrast, is **painted outside the layout box**. It does not affect the element's computed width, height, or the position of any other element. The browser skips reflow entirely and only triggers a repaint — a dramatically cheaper operation.
+
+The `0 0 0 2.5px` syntax is the standard inset-spread trick: `offset-x: 0, offset-y: 0, blur: 0, spread: 2.5px`. With zero blur, it renders as a precise solid ring — visually identical to a border, but layout-safe.
+
+This pattern is used consistently:
+- `.field-input:focus` — red focus ring
+- `.sos-circle-outer` — expanding glow via box-shadow animation
+- `.gobag-milestone-card` — card elevation shadow
+- `.btn-add-contact` — red drop shadow and hover glow
+
+---
+
+## 3. The SPA Data-Attribute Routing System
+
+Navigation in Typhoon GO is driven by a single `data-target` attribute convention and one global event listener.
+
+### How It Works
+
+**HTML Convention:**
+Any element that should trigger navigation carries a `data-target` attribute set to the ID of the destination page:
+
 ```html
-<img src="/images/typhoon-safety-guide.jpg" alt="..." />
+<button class="btn-back" data-target="page-login">&#8592;</button>
+<button class="nav-btn" data-target="page-dashboard">Home</button>
+<button class="carousel-slide-btn" data-target="page-typhoon-tips">...</button>
 ```
 
-**To Handle Click Navigation:**
-Each slide has `data-target` attribute for navigation (currently unused):
-```html
-<div class="carousel-slide" data-target="page-survival-tips">
-```
+**JavaScript Wiring:**
+A single loop registers click handlers on all `[data-target]` elements at script load time:
 
-Add handler if needed:
 ```javascript
-document.querySelectorAll('.carousel-slide').forEach(slide => {
-  slide.addEventListener('click', () => {
-    const target = slide.getAttribute('data-target');
+document.querySelectorAll('[data-target]').forEach(el => {
+  el.addEventListener('click', () => {
+    const target = el.getAttribute('data-target');
     if (target) navigateTo(target);
   });
 });
 ```
 
+**`navigateTo()` Execution:**
+
+```javascript
+function navigateTo(targetId) {
+  const currentActive = document.querySelector('.page.active');
+  const target = document.getElementById(targetId);
+
+  if (!target || target === currentActive) return;
+
+  if (currentActive) currentActive.classList.remove('active');
+
+  target.classList.add('active');
+  target.classList.add('slide-in');
+
+  target.addEventListener('animationend', () => {
+    target.classList.remove('slide-in');
+  }, { once: true });
+
+  target.scrollTop = 0;
+  updateNavbarActive(targetId);
+
+  if (targetId === 'page-safe-routes') {
+    setTimeout(() => {
+      if (!map) initFreeMap();
+      else map.invalidateSize();
+    }, 100);
+  }
+}
+```
+
+**What happens:**
+1. The guard `if (!target || target === currentActive) return` prevents navigating to a non-existent page or re-navigating to the current page (which would reset scroll position unnecessarily).
+2. `.active` is removed from the current page (`display: none` resets it visually immediately).
+3. `.active` + `.slide-in` are added to the target — `display: flex` makes it visible, and `slideIn` keyframes (`translateX(100%) → translateX(0)`) animate it in from the right.
+4. `{ once: true }` on the `animationend` listener ensures the cleanup callback fires exactly once and auto-removes itself from the listener queue.
+5. `scrollTop = 0` resets the page scroll so users always enter a page at the top.
+
+**Why not `history.pushState`?**
+
+In a disaster scenario PWA, the browser back button could take users out of the application entirely if `pushState` is used naively. Without implementing a full history management strategy, it's safer to avoid the History API. The application's back navigation is handled entirely via explicit `btn-back` elements, giving the application full control over navigation flow.
+
+**Why not hash routing?**
+
+Hash routing (`#page-dashboard`) would allow users to bookmark or share deep links, but it also means browser navigation (forward/back) enters the picture. In the current stage of the application, deep linking is not a requirement, and the simpler data-attribute model is sufficient and more maintainable.
+
 ---
 
-### 3. Resource Grid
+## 4. The `+63` Phone Number Prefix — JS-Only Approach
 
-**Location:** Dashboard → Resource Grid  
-**Purpose:** Quick access to key emergency resources
+**The problem:** Emergency contact phone numbers in the Philippines universally use the `+63` country code. The application needs to store fully-qualified phone numbers, but requiring users to type `+63` manually is friction — especially in a stress scenario.
 
-**Structure:**
+**The anti-pattern:** A common approach is to add a UI prefix wrapper — a non-editable `<span>` showing `+63` visually prepended to an `<input>`. This requires:
+- Extra HTML wrapper markup
+- CSS to visually merge the prefix with the input field
+- Additional logic to prevent the user from inadvertently editing or interacting with the prefix
+
+**The Typhoon GO approach:**
+
+The `<input>` for phone number is a plain `.field-input` with `type="tel"` and no prefix UI:
+
 ```html
-<div class="resource-grid">
-  <button class="resource-tile" id="btn-gobag">
-    <div class="resource-tile-icon-wrap resource-tile-icon--green">
-      <i class="fas fa-backpack resource-tile-icon"></i>
-    </div>
-    <span class="resource-tile-label">Go-Bag Checklist</span>
-  </button>
-  <!-- Additional tiles... -->
-</div>
+<input class="field-input" id="new-contact-phone" type="tel" placeholder="9XXXXXXXXX" />
 ```
 
-**Current Tiles (2×2 Grid):**
-1. **Go-Bag Checklist** (ID: `btn-gobag`)
-   - Icon: `fas fa-backpack`
-   - Color: Green (#2ECC40)
-   - Currently: Not implemented
+The prefix is applied in the data layer at form submission time:
 
-2. **Emergency Updates** (ID: `btn-emergency-updates`)
-   - Icon: `fas fa-bullhorn`
-   - Color: Orange (#FF851B)
-   - Navigation: → page-emergency-updates
+```javascript
+addContactForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const phone = document.getElementById('new-contact-phone').value.trim();
 
-3. **Safe Routes** (ID: `btn-safe-routes`)
-   - Icon: `fas fa-route`
-   - Color: Blue (#0074d9)
-   - Navigation: → page-safe-routes
+  const newContact = {
+    name: name,
+    phone: '+63' + phone,  // Prefix applied here, in JS
+    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  };
+});
+```
 
-4. **Evacuation Centers** (ID: `btn-evac-centers`)
-   - Icon: `fas fa-building-shelter`
-   - Color: Purple (#b10dc9)
-   - Navigation: → page-evac-centers
+**Benefits:**
+- **Zero UI complexity.** The input is a standard `.field-input` with no special styling or wrapper.
+- **No CSS double-border risk.** No wrapper element means no potential for the double-border defect that was fixed in the form input bug (see `REFACTORING_SUMMARY.md`).
+- **Clear data flow.** The raw phone number (local format) is in the UI layer; the fully-qualified number (`+63XXXXXXXXX`) is only constructed at the model layer during form submission. This separation is maintainable and testable.
+- **Easy to extend.** If the application later supports international contacts, a dropdown country selector can replace the hardcoded `+63` constant without touching the input field design.
 
-**CSS Grid Properties:**
-- Columns: 2 (equal width)
-- Column Gap: 16px
-- Row Gap: 16px
-- Min Tile Height: 180px
-- Flex: 1 (grow to fill remaining space)
+The `type="tel"` attribute on the input ensures mobile browsers render a numeric keypad, further reducing friction.
 
-**To Add New Tiles:**
-1. Add new button with unique `id`
-2. Add appropriate Font Awesome icon
-3. Choose or create new color class: `resource-tile-icon--color-name`
-4. Define gradient in CSS:
-```css
-.resource-tile-icon--color-name {
-  background: linear-gradient(135deg, #color1 0%, #color2 100%);
+---
+
+## 5. Lazy Map Initialization Pattern
+
+The Leaflet map is expensive to initialize — it triggers HTTP tile requests, DOM mutations, and canvas or SVG rendering. Initializing it on app load (even if the Safe Routes page is not visible) would waste network and CPU resources, and could slow the initial paint of the Dashboard.
+
+The solution is lazy initialization with a viewport stabilization guard:
+
+```javascript
+function navigateTo(targetId) {
+  // ... navigation logic ...
+
+  if (targetId === 'page-safe-routes') {
+    setTimeout(() => {
+      if (!map) {
+        initFreeMap();
+      } else {
+        map.invalidateSize();
+      }
+    }, 100);
+  }
 }
 ```
 
-**Current Event Handlers:**
+**Why `setTimeout(..., 100)`?**
+
+When `navigateTo` runs, the target page is set to `display: flex` and the slide animation begins — but the browser may not have completed its layout pass before the next synchronous JavaScript executes. Leaflet's `L.map()` calls `getBoundingClientRect()` on `#map-container` internally to determine the map's pixel dimensions. If this runs before the browser has painted the newly-activated page, it reads a width and height of `0` — resulting in a broken map that renders no tiles.
+
+The 100ms timeout yields to the browser event loop, allowing the paint pass to complete before Leaflet measures the container. This is a pragmatic compromise between correctness and complexity — a `requestAnimationFrame` followed by another `requestAnimationFrame` would be technically more precise, but the 100ms timeout is reliable in practice on all target devices.
+
+**Why `map.invalidateSize()`?**
+
+If the user navigates to Safe Routes, then away, then back — the map DOM container still exists (pages are never destroyed, only hidden). The existing Leaflet instance is valid, but the container may have zero dimensions while hidden. `invalidateSize()` forces Leaflet to re-read the container's current dimensions and redraw tiles accordingly.
+
+---
+
+## 6. Event Delegation for Dynamic Contact Chat Routing
+
+The messaging system uses a pattern of **event delegation with runtime DOM inspection** to handle navigation from multiple contexts (contact list row, recent call card) without duplicating event listener registrations.
+
 ```javascript
-document.getElementById('btn-emergency-updates').addEventListener('click', () => {
-  navigateTo('page-emergency-updates');
-});
+document.addEventListener('click', (e) => {
+  const smsBtn  = e.target.closest('.contact-sms');
+  const callCard = e.target.closest('.recent-call-card');
 
-document.getElementById('btn-safe-routes').addEventListener('click', () => {
-  navigateTo('page-safe-routes');
-});
+  let targetName   = null;
+  let targetBgColor = 'var(--red)';
 
-document.getElementById('btn-evac-centers').addEventListener('click', () => {
-  navigateTo('page-evac-centers');
+  if (smsBtn) {
+    targetName    = smsBtn.getAttribute('data-contact');
+    const row     = smsBtn.closest('.contact-row');
+    if (row) {
+      const avatar = row.querySelector('.contact-avatar');
+      if (avatar) targetBgColor = avatar.style.backgroundColor || targetBgColor;
+    }
+  } else if (callCard) {
+    targetName    = callCard.getAttribute('data-contact');
+    const avatar  = callCard.querySelector('.recent-call-avatar');
+    if (avatar) targetBgColor = avatar.style.backgroundColor || targetBgColor;
+  }
+
+  if (targetName) {
+    document.getElementById('msg-header-name').textContent  = targetName;
+    document.getElementById('msg-empty-name').textContent   = targetName;
+    const initial = targetName.charAt(0).toUpperCase();
+    document.getElementById('msg-header-avatar').textContent          = initial;
+    document.getElementById('msg-header-avatar').style.backgroundColor = targetBgColor;
+    document.getElementById('msg-empty-avatar').textContent           = initial;
+    document.getElementById('msg-chat-list').innerHTML                = '';
+    document.getElementById('msg-empty-state').style.display          = 'flex';
+    document.getElementById('msg-quick-chats').style.display          = 'flex';
+    navigateTo('page-message');
+  }
 });
 ```
 
----
+This single listener on `document` handles clicks bubbling up from any SMS button or recent call card anywhere in the application — including cards dynamically injected by `addContactToCarousel()`. This is correct — dynamically added elements are automatically covered by delegation, unlike per-element `addEventListener` calls which would miss new elements.
 
-## CSS Classes Reference
-
-### SOS Action Area
-| Class | Purpose |
-|-------|---------|
-| `.sos-action-area` | Container |
-| `.sos-pulse-btn` | Main button |
-| `.sos-pulse-ring` | Pulse ring base |
-| `.sos-ring-1` | First ring (inner) |
-| `.sos-ring-2` | Second ring (outer) |
-| `.sos-circle-core` | Icon + text container |
-| `.sos-icon` | Exclamation icon |
-| `.sos-label` | "SOS" text |
-| `.sos-hint-text` | Hint text below |
-
-### Carousel
-| Class | Purpose |
-|-------|---------|
-| `.featured-carousel-wrap` | Main container |
-| `.featured-carousel` | Scrollable slides |
-| `.carousel-slide` | Individual slide |
-| `.carousel-slide-img-wrap` | Image container |
-| `.carousel-img` | Actual image |
-| `.carousel-img-fallback` | Fallback when no image |
-| `.carousel-fallback-icon` | Fallback icon |
-| `.carousel-slide-text` | Text overlay |
-| `.carousel-slide-eyebrow` | Category text |
-| `.carousel-slide-title` | Main title |
-| `.carousel-slide-sub` | Subtitle |
-| `.carousel-arrow` | Chevron icon |
-| `.carousel-dots` | Dot container |
-| `.carousel-dot` | Individual dot |
-| `.carousel-dot.active` | Active dot |
-
-### Resource Grid
-| Class | Purpose |
-|-------|---------|
-| `.resource-grid` | Grid container |
-| `.resource-tile` | Individual tile |
-| `.resource-tile-icon-wrap` | Icon container |
-| `.resource-tile-icon--green` | Green theme |
-| `.resource-tile-icon--orange` | Orange theme |
-| `.resource-tile-icon--blue` | Blue theme |
-| `.resource-tile-icon--purple` | Purple theme |
-| `.resource-tile-icon` | The actual icon |
-| `.resource-tile-label` | Tile label text |
+The `e.target.closest()` call walks up the DOM tree from the actual clicked element to find the nearest ancestor matching the selector, safely handling clicks on child elements (e.g., clicking the icon inside a button).
 
 ---
 
-## Color Scheme
+## 7. IIFE Scope Isolation for the Go-Bag Checklist
 
-### Primary Colors
-- **Red** (Emergency): `#FF2323`
-- **Red Light**: `#FF5555`
-- **Red Pale**: `#FFD6D6`
-- **Green**: `#2ECC40`
-- **Orange**: `#FF851B`
-- **Blue**: `#0074d9`
-- **Purple**: `#b10dc9`
+The Go-Bag Checklist logic is wrapped in an **Immediately Invoked Function Expression (IIFE)**:
 
-### CSS Variables
-All colors are defined in `:root`:
-```css
---red: #FF2323
---green: #2ECC40
---orange: #FF851B
---blue: (custom)
---purple: (custom)
-```
-
----
-
-## Responsive Design
-
-### Current Breakpoints
-- **Mobile First:** Default styles
-- **Tablet/Desktop:** Max-width 430px container
-
-### Grid Behavior
-Resource grid maintains 2-column layout at all sizes. The app container is fixed at 390px, so responsive design primarily targets the carousel and sizing.
-
----
-
-## Performance Considerations
-
-1. **Carousel Animation:** Uses CSS transforms for better performance
-2. **Pulse Rings:** GPU-accelerated with transform/opacity animations
-3. **Scrolling:** Smooth scroll disabled (scrollbar-width: none)
-4. **Touch Events:** Debounced swipe detection
-
----
-
-## File Sizes
-
-| File | Size | Lines |
-|------|------|-------|
-| index.html | ~24.5 KB | 578 |
-| style.css | ~52 KB | 1191 |
-| script.js | ~14 KB | 358 |
-
----
-
-## Browser Support
-
-| Feature | Chrome | Firefox | Safari | Edge | Mobile |
-|---------|--------|---------|--------|------|--------|
-| CSS Grid | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Flexbox | ✅ | ✅ | ✅ | ✅ | ✅ |
-| CSS Animations | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Touch Events | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Transform3D | ✅ | ✅ | ✅ | ✅ | ✅ |
-
----
-
-## Common Tasks
-
-### To modify SOS button size
-Update in `.sos-pulse-btn`:
-```css
-width: 200px;  /* Changed from 180px */
-height: 200px; /* Changed from 180px */
-```
-Also adjust pulse rings in `.sos-ring-1` and `.sos-ring-2`.
-
-### To change carousel animation speed
 ```javascript
-// In showSlide function
-carousel.style.transition = '1s cubic-bezier(...)'; // Changed from 0.5s
-
-// For auto-rotation
-}, 7000); // Changed from 5000ms
+(function initGoBagChecklist() {
+  // All checklist variables and functions are scoped here
+  const checkboxes   = document.querySelectorAll('.gobag-checkbox');
+  // ...
+})();
 ```
 
-### To modify grid layout
-```css
-.resource-grid {
-  grid-template-columns: 1fr 1fr 1fr; /* Changed to 3 columns */
-}
-```
+This pattern serves two purposes:
 
-### To add new resource tile
-1. Add button to HTML with new ID
-2. Add event listener in JavaScript
-3. Style with appropriate color class
-4. Update grid-template-columns if needed
+1. **Variable isolation:** All DOM references (`checkboxes`, `progressFill`, `overlay`, etc.) and state variables (`triggered` milestone map) are confined to the IIFE's scope. They cannot conflict with variables in the global script scope or other feature blocks.
+2. **Self-documenting:** The named IIFE (`initGoBagChecklist`) makes it clear in call stacks (DevTools) and code reviews exactly what this block initializes, unlike an anonymous IIFE.
 
----
-
-## Troubleshooting
-
-### Carousel Not Auto-Rotating
-- Check if `currentSlide` is being updated
-- Verify `setInterval` is not being cleared
-- Check browser console for JavaScript errors
-
-### Pulse Rings Not Animating
-- Verify `@keyframes sosPulseRing1` and `sosPulseRing2` are defined
-- Check if animations are being applied to correct elements
-- Ensure animation duration matches (2s)
-
-### Touch Swipe Not Working
-- Verify touch events are being fired
-- Check if carousel element exists
-- Ensure `handleSwipe()` function is defined
-
-### Resource Grid Not Centering
-- Verify `.resource-grid` has correct `display: grid` property
-- Check gap values are appropriate
-- Ensure parent container has proper flex properties
-
----
-
-## Future Enhancement Opportunities
-
-1. **Predictive Carousel:**
-   - Rotate through different guides daily/weekly
-   - Machine learning to predict user needs
-
-2. **Customizable Resource Tiles:**
-   - User preference order
-   - Local resource discovery
-   - Custom emergency contacts
-
-3. **Advanced SOS Features:**
-   - Real-time location sharing
-   - Emergency contact notification
-   - Offline mode support
-   - Backup power indicators
-
-4. **Accessibility Improvements:**
-   - ARIA labels for carousel
-   - Keyboard navigation
-   - High contrast mode
-   - Screen reader optimization
-
-5. **Analytics Integration:**
-   - Track SOS usage
-   - Monitor resource popularity
-   - User engagement metrics
-
----
-
-## Document Version
-- **Version:** 1.0
-- **Last Updated:** 2026-05-09
-- **Status:** Production Ready
-
+The guard at the top — `if (!checkboxes.length) return` — makes the IIFE safe to load even if `#page-gobag` is not present in the DOM (for future refactoring or page removal).

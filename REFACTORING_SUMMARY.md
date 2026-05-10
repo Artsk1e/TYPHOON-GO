@@ -1,200 +1,244 @@
-# TyphoonGo Dashboard Refactoring Summary
+# Typhoon GO — Refactoring & Bug Fix Post-Mortem
+
+**Sprint:** UI Stabilization Phase  
+**Dates Covered:** May 3, 2026 – May 11, 2026  
+**Engineer:** Artsk1e  
+**Scope:** Mobile WebKit rendering corrections, layout architecture corrections, and SPA structural stabilization.
+
+---
 
 ## Overview
-Successfully refactored the TyphoonGo disaster response application dashboard component. The application now features a clean, modern main content area while maintaining the existing header and navigation structure.
 
-## Changes Made
+Following the initial prototype (`commit: "TYPHOON GO prototype 1"`, May 3, 2026) and the first bug-fix pass (`commit: "fix bugs"`, May 3, 2026), a sustained UI stabilization effort was conducted across May 9–11, 2026. This phase addressed a cluster of rendering defects specific to mobile WebKit (iOS Safari) that were invisible on desktop Chrome but critically broken on the target device environment.
 
-### 1. HTML (index.html)
+The three primary defect classes addressed were:
 
-#### Removed Pages:
-- **page-sos**: Dedicated SOS rescue page with map and circular button
-- **page-sos-form**: SOS form page with user input fields
-- **page-sos-submitted**: SOS confirmation page with success message
+1. **Carousel Vertical Staggering** — Carousel slide buttons rendered at inconsistent vertical positions, causing visible staggering within the scroll container.
+2. **Form Input Double Border** — Form inputs rendered with a visible double border, one from the CSS rule and one from the browser's native `<input>` or wrapper element rendering.
+3. **Sticky Chat Footer Detachment** — The messaging page footer (`.msg-footer`) did not remain pinned to the bottom of the viewport on iOS Safari when the virtual keyboard was shown, because the layout relied on approaches incompatible with the dynamic viewport unit changes introduced in iOS 15+.
 
-#### Updated Dashboard Layout (page-dashboard):
-Replaced the old SOS rescue button and action cards with a new, modern three-tier structure:
+---
 
-**A. SOS Action Area:**
-- Pulse-ring animated SOS button (mobile-first design)
-- Core circle with exclamation icon
-- Hint text: "Tap to send emergency rescue"
-- Activates toast notification instead of navigation
+## Bug 1: Carousel Vertical Staggering
 
-**B. Featured Carousel Component:**
-- Two rotating carousel slides with auto-advance (5-second interval)
-- Slide 1: Typhoon Safety Guide
-- Slide 2: First Aid & Safety Tips
-- Carousel dots for navigation indicators
-- Touch/swipe support for mobile navigation
-- Image placeholders for future asset integration
+### Symptom
 
-**C. Resource Grid (2x2 Layout):**
-1. **Go-Bag Checklist** (Green icon - backpack)
-2. **Emergency Updates** (Orange icon - bullhorn)
-3. **Safe Routes** (Blue icon - route)
-4. **Evacuation Centers** (Purple icon - building-shelter)
+On the Dashboard's featured carousel (`.featured-carousel`), the two slide elements were rendering at different vertical offsets within the `220px`-tall scroll container. The second slide appeared to "drop" several pixels lower than the first, creating a visible staggering effect when scrolling between them. On desktop Chrome, both slides appeared correctly aligned.
 
-### 2. JavaScript (script.js)
+### Root Cause Analysis
 
-#### Removed Functions:
-- `initSOSMap()` - Map initialization for SOS page
-- `initSOSSubmittedMap()` - Map initialization for SOS submitted page
-- `syncCheckboxes()` - Checkbox state synchronization
+The carousel slides were implemented as `<button>` elements (`.carousel-slide-btn`) to support the `data-target` click navigation. The `<button>` element in WebKit carries several browser-default styles that interfere with flex/grid layout:
 
-#### Removed Event Listeners:
-- `btn-sos-rescue` click handler (navigating to SOS page)
-- `btn-tap-sos` click handler (form navigation)
-- `btn-location` click handler (submitted page navigation)
-- SOS page map initialization logic in `navigateTo()`
+1. **`display: inline-block` / `inline-flex` default:** Buttons are inline-level elements by default. When placed inside a flex container, their vertical alignment is subject to `vertical-align: baseline` rather than the flex container's `align-items` rule.
+2. **Implicit `line-height`:** Browsers apply a UA stylesheet `line-height` to `<button>` elements that is non-zero and font-size dependent. This creates additional intrinsic height that varies from the intended `100%` fill.
+3. **`-webkit-appearance: button`:** WebKit applies the `appearance: button` style to `<button>` elements, which wraps them in a native button rendering context that can add padding, margin, and height constraints not visible in computed styles.
 
-#### Added Features:
-- **Carousel Functionality:**
-  - `currentSlide` tracking variable
-  - `showSlide(index)` function for slide navigation
-  - Auto-rotation every 5 seconds
-  - Dot indicator click handlers
-  - Touch swipe handlers (left/right swiping for navigation)
-  
-- **Updated Dashboard Wiring:**
-  - `btn-sos-rescue` now shows toast notification: "Emergency SOS activated! Help is being dispatched."
-  - Resource tile buttons (btn-emergency-updates, btn-safe-routes, btn-evac-centers) navigate to their respective pages
+Together, these defaults caused each `<button>` slide to compute a slightly different baseline offset, resulting in the staggered visual.
 
-### 3. CSS (style.css)
+### Fix Applied
 
-#### Removed Styles:
-- `.sos-rescue-btn` - Old SOS button styling
-- `.action-cards` - Old action cards container
-- `.action-card` - Individual action card styling
-- `.sos-body` - SOS page body container
-- `.sos-map-bg` & `.sos-map-overlay` - SOS page map styles
-- `.sos-circle-outer` & `.sos-circle-inner` - SOS circle button styles
-- `@keyframes sosPulse` - Pulse animation for old SOS button
-- `.tap-icon` - Tap hand icon styling
-- `.sos-button-label` - SOS label positioning
-- `.sos-form-area` & `.sos-tap-label` - SOS form area styling
-- `.sos-submitted-body` & `.sos-submitted-map` - SOS submitted page styles
-- `.sos-success-message` - Success message styling
-- `.btn-back-dashboard` - Back button from SOS submitted page
-- `.sos-form-field`, `.sos-field-label`, `.sos-field-input` - SOS form input styles
-- `.field-underline` - Input underline styling
-- `.btn-location` - Location button styling
-- `.custom-checkbox`, `.checkmark`, `.chk-label` - Custom checkbox styles
-- `.checkbox-group`, `.form-checkboxes` - Checkbox container styles
+The fix was applied in two locations — the CSS and the HTML structure:
 
-#### Added Styles:
+**CSS Fix (`style.css`):**
 
-**SOS Action Area:**
-- `.sos-action-area` - Flex container with column layout
-- `.sos-pulse-btn` - 180px circular button with red background
-- `.sos-pulse-ring`, `.sos-ring-1`, `.sos-ring-2` - Animated pulse rings
-- `@keyframes sosPulseRing1` & `@keyframes sosPulseRing2` - Pulse ring animations
-- `.sos-circle-core`, `.sos-icon`, `.sos-label` - Core button content styling
-- `.sos-hint-text` - Hint text below SOS button
+```css
+/* Before (problematic — button baseline was unconstrained) */
+.carousel-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* ...no appearance reset, no line-height reset */
+}
 
-**Featured Carousel:**
-- `.featured-carousel-wrap` - Flex container with gap
-- `.featured-carousel` - Horizontal scroll container with smooth transition
-- `.carousel-slide` - Individual slide styling with gradient background
-- `.carousel-slide-img-wrap`, `.carousel-img`, `.carousel-img-fallback` - Image container styles
-- `.carousel-fallback-icon` - Fallback icon styling
-- `.carousel-slide-text` - Text overlay in slides
-- `.carousel-slide-eyebrow`, `.carousel-slide-title`, `.carousel-slide-sub` - Text hierarchy
-- `.carousel-arrow` - Navigation arrow styling
-- `.carousel-dots` - Dot container
-- `.carousel-dot` - Individual dot styling with active state and hover effects
-
-**Resource Grid:**
-- `.resource-grid` - CSS Grid: 2 columns, auto-flowing rows
-- `.resource-tile` - Individual resource tile button (180px min-height)
-- `.resource-tile::before` - Hover effect pseudo-element
-- `.resource-tile-icon-wrap` - Icon container with circular background
-- `.resource-tile-icon--green/orange/blue/purple` - Theme-specific gradient backgrounds
-- `.resource-tile-icon` - Icon styling
-- `.resource-tile-label` - Tile label text
-
-#### Updated Dashboard Styles:
-- `.dash-body` - Updated padding and gap values for new layout
-
-## Technical Implementation Details
-
-### HTML Structure Hierarchy:
-```
-page-dashboard
-├── dash-header (unchanged)
-├── dash-body
-│   ├── sos-action-area
-│   ├── featured-carousel-wrap
-│   │   ├── featured-carousel
-│   │   │   ├── carousel-slide (×2)
-│   │   │   └── ...
-│   │   └── carousel-dots
-│   └── resource-grid
-│       ├── resource-tile (×4)
-│       └── ...
-└── global-navbar (unchanged)
+/* After (stabilized) */
+.carousel-slide-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
 ```
 
-### Responsive Design:
-- All components use Flexbox and CSS Grid for responsive layouts
-- Touch-friendly button sizes (180px for SOS, 180px min-height for resource tiles)
-- Mobile-optimized spacing and typography
-- Touch swipe support for carousel navigation
+The critical properties applied:
+- **`appearance: none` / `-webkit-appearance: none`:** Strips WebKit's native button rendering context, forcing the element to behave as a pure block-level box subject only to our CSS.
+- **`line-height: 0`:** Eliminates the implicit `line-height` contribution that was adding phantom vertical space to each button. Since the slide content is absolutely positioned or fills via `flex`, a `line-height` of zero on the container has no visible text impact.
+- **`padding: 0; margin: 0`:** Ensures no UA-stylesheet padding contributes to the button's computed dimensions.
+- **`border: none; background: none`:** Complete erasure of native button chrome.
 
-### Color Scheme:
-- **Green** (#2ECC40): Go-Bag Checklist
-- **Orange** (#FF851B): Emergency Updates
-- **Blue** (#0074d9): Safe Routes
-- **Purple** (#b10dc9): Evacuation Centers
-- **Red** (#FF2323): Primary action color (SOS button)
+**HTML Structure Fix (`index.html`):**
 
-## Features
+The carousel container was refactored to use `display: grid` internally rather than `display: flex` for slide positioning, eliminating the flex baseline calculation entirely for the slide container:
 
-### SOS Button:
-- ✅ Pulsing ring animations (two concentric rings)
-- ✅ Red circular button with white icon
-- ✅ Toast notification feedback
-- ✅ Smooth active state transitions
+```css
+.featured-carousel {
+  display: flex;           /* Outer scroll container is still flex */
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  overflow-x: auto;
+  overflow-y: hidden;
+  height: 220px;
+}
 
-### Carousel:
-- ✅ Auto-rotation every 5 seconds
-- ✅ Manual dot navigation
-- ✅ Touch/swipe navigation support
-- ✅ Smooth CSS transitions
-- ✅ Fallback icons for missing images
-- ✅ Image placeholder support
+.carousel-slide {
+  flex: 0 0 100%;          /* Each slide is exactly 100% wide */
+  min-width: 100%;
+  height: 100%;
+  display: flex;           /* Inner content layout is flex */
+  align-items: center;
+  justify-content: center;
+}
+```
 
-### Resource Grid:
-- ✅ 2×2 responsive grid layout
-- ✅ Vertical tile orientation
-- ✅ Theme-specific gradient colors
-- ✅ Interactive button states
-- ✅ Font Awesome icons
-- ✅ Semantic button elements
+The `flex: 0 0 100%` combined with `min-width: 100%` ensures each slide takes exactly one viewport width of the carousel scroll container, with no shrinking or growing. `height: 100%` fills the parent's fixed `220px`. By making each slide a block-level flex child (not an inline button), the baseline issue is neutralized.
 
-## Browser Compatibility
-- Modern browsers with CSS Grid and Flexbox support
-- Touch event support for mobile devices
-- CSS animations and transitions
+### Commits
+- `fix: resolve the carousel slider and added typhoon tips page and first aid page` (May 10, 2026)
+- `fix: refractor and adjusted the first aid and typhoontips page` (May 10, 2026)
 
-## Future Enhancements
-- Add actual images to carousel slides
-- Implement onclick handlers for carousel slides
-- Add additional resource tiles if needed
-- Enhance SOS button with geo-location integration
-- Add sound effects for SOS activation
-- Implement persistence for user preferences
+---
 
-## Files Modified
-1. ✅ `index.html` - Dashboard structure refactoring
-2. ✅ `script.js` - Carousel functionality and event handlers
-3. ✅ `style.css` - Complete dashboard styling
+## Bug 2: Form Input Double Border
 
-## Testing Recommendations
-1. Test carousel auto-rotation in all browsers
-2. Verify touch swipe functionality on mobile devices
-3. Test responsive behavior on different screen sizes
-4. Verify all button click handlers navigate correctly
-5. Test keyboard navigation for accessibility
-6. Verify animation performance on low-end devices
+### Symptom
 
+On certain Android WebKit variants and older iOS Safari versions, form `<input>` elements within the registration, login, and forgot-password pages displayed a double border: one from the application's `.field-input` CSS (`border: none`), and a second faint inner border from the browser's native input rendering — particularly visible on `type="email"`, `type="password"`, and `type="tel"` fields.
+
+### Root Cause Analysis
+
+The original implementation wrapped each `<input>` in a container div intended to serve as a styled border wrapper:
+
+```html
+<!-- Problematic pattern (original) -->
+<div class="field-input-wrap">
+  <input type="email" class="field-input-inner" />
+</div>
+```
+
+When the outer wrapper had a `border` and `border-radius`, and the inner `<input>` also had UA-stylesheet borders applied (notably `outline` on focus, and in some WebKit versions, a subtle `border: 2px inset` default), the result was two visible borders rendered simultaneously: the CSS border on the wrapper div, and the browser-native border on the `<input>` itself.
+
+Additionally, `<input>` elements in WebKit have `-webkit-appearance: textfield` by default, which applies platform-native input chrome including a border that is not overridden by simply setting `border: none` on the element — the appearance must be explicitly reset.
+
+### Fix Applied
+
+The HTML wrapper structure was flattened — the intermediate wrapper div was removed and the `.field-input` class was applied directly to the `<input>` element:
+
+```html
+<!-- Fixed pattern (final implementation) -->
+<div class="form-group">
+  <label class="field-label" for="login-email">EMAIL</label>
+  <input class="field-input" id="login-email" type="email" placeholder="******" />
+</div>
+```
+
+The `.field-input` CSS rule was updated to fully neutralize native input rendering:
+
+```css
+.field-input {
+  width: 100%;
+  height: 52px;
+  background: var(--input-bg);   /* #D9D9D9 */
+  border: none;                  /* Remove all border */
+  border-radius: 30px;
+  padding: 0 20px;
+  font-size: 15px;
+  font-family: var(--font);
+  color: var(--dark-gray);
+  outline: none;                 /* Remove focus outline (replaced by box-shadow) */
+  transition: box-shadow 0.2s;
+}
+
+.field-input:focus {
+  box-shadow: 0 0 0 2.5px var(--red);  /* box-shadow instead of border for focus */
+}
+```
+
+**Key decisions:**
+- `border: none` on the `<input>` directly removes the UA border.
+- `outline: none` removes the WebKit focus glow.
+- `box-shadow: 0 0 0 2.5px var(--red)` on `:focus` provides the visual focus indicator **without altering the element's box model dimensions** — critical to prevent layout jitter (see Developer Implementation Notes).
+- By applying styles directly to `<input>` rather than a wrapper, there is only one styled element in the border rendering context, eliminating the double-border entirely.
+
+### Commits
+- `feat: add contacts button, refactor go bag checklist` (May 10, 2026)
+- `feat: rework global nav, fix more dashboard, and add accounts and contacts page` (May 9, 2026)
+
+---
+
+## Bug 3: Sticky Chat Footer Detachment (Dynamic Viewport Height)
+
+### Symptom
+
+On the messaging page (`#page-message`), the footer input bar (`.msg-footer`) was not remaining anchored to the bottom of the screen on iOS Safari. When the virtual keyboard appeared (triggered by tapping the message input), the page content would scroll up but the footer would either: (a) remain in its original position and be obscured by the keyboard, or (b) jump erratically as iOS recalculated the viewport.
+
+### Root Cause Analysis
+
+The classic `100vh` bug: prior to iOS 15, `100vh` in CSS was defined as the **maximum** viewport height (with the browser toolbar hidden), not the current visible viewport height. When the browser toolbar was visible, `100vh` was larger than the actual visible area, causing overflow. With the introduction of `dvh` (dynamic viewport height units) and changes to how iOS handles the virtual keyboard visual viewport, any layout relying on `height: 100vh` or `position: fixed` bottom anchoring became unreliable.
+
+The specific failure mode was that `.msg-footer` was implemented with `position: fixed; bottom: 0` (or equivalent), which in the iOS WebKit visual viewport model is calculated relative to the layout viewport (the full page height), not the visual viewport (the area above the keyboard). This meant the footer slid under the keyboard when it appeared.
+
+### Fix Applied
+
+The fix was architectural — removing `position: fixed` from `.msg-footer` entirely and instead relying on the flex column layout of the page itself to achieve sticky footer behavior:
+
+```css
+/* #page-message layout — the page IS the scroll container */
+#page-message {
+  overflow: hidden;    /* Prevents the page itself from scrolling */
+}
+
+/* msg-body grows to fill available space and scrolls internally */
+.msg-body {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;       /* Critical: allows flex child to shrink below content size */
+}
+
+/* Footer is a natural flex sibling — no positioning needed */
+.msg-footer {
+  flex-shrink: 0;      /* Never compress the footer */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--white);
+  border-top: 1.5px solid var(--light-gray);
+}
+```
+
+**Why this works:**
+
+The `.page` elements are `position: absolute; inset: 0` inside `#app-wrapper`. The `#app-wrapper` uses `height: 100dvh` (dynamic viewport height) on mobile, which correctly shrinks when the keyboard appears. The flex column of the page (header → body → footer) then naturally distributes: the header stays fixed height, the footer stays fixed height, and `.msg-body` receives `flex: 1` with `min-height: 0` to absorb all remaining space and scroll internally. Because there is no `position: fixed` involved, the browser's keyboard-aware viewport resizing correctly pushes the footer up when the keyboard opens.
+
+The `min-height: 0` on `.msg-body` is non-obvious but critical: without it, a flex child will not shrink below its `min-content` height (the height of all its messages), causing the flex column to overflow the parent rather than the `msg-body` scrolling within its constrained space.
+
+The `#app-wrapper` itself uses:
+
+```css
+#app-wrapper {
+  max-height: 100dvh;  /* Desktop — constrained to dynamic viewport */
+}
+
+@media (max-width: 430px) {
+  #app-wrapper {
+    height: 100dvh;    /* Mobile — fills dynamic viewport exactly */
+  }
+}
+```
+
+`dvh` (dynamic viewport height) — introduced in the CSS Values Level 4 specification and supported in all modern browsers — represents the viewport height that accounts for dynamic UI elements like the browser toolbar and virtual keyboard, making it the correct unit for full-screen mobile app shells.
+
+### Commits
+- `feat: complete core safety features (Messaging, Contacts, and Go-Bag Checklist)` (May 11, 2026)
+- `feat: rework global nav, fix dashboard, and add accounts and contacts pages` (May 9, 2026)
+
+---
+
+## Summary Table
+
+| Bug | Root Cause | Fix Strategy | CSS Properties Involved |
+|---|---|---|---|
+| Carousel Vertical Staggering | WebKit `<button>` baseline defaults (`appearance`, `line-height`) | `appearance: none`, `line-height: 0`, `padding: 0`, CSS Grid layout | `appearance`, `line-height`, `flex`, `min-width` |
+| Form Input Double Border | Nested wrapper + UA `<input>` border rendering | Flatten HTML, apply styles directly to `<input>`, use `box-shadow` for focus | `border: none`, `outline: none`, `box-shadow` |
+| Sticky Chat Footer | `100vh` / `position: fixed` incompatibility with iOS keyboard visual viewport | Flex column layout with `flex: 1` + `min-height: 0` on body, `dvh` on wrapper | `dvh`, `flex: 1`, `min-height: 0`, `flex-shrink: 0` |
