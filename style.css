@@ -769,8 +769,10 @@ html, body {
 }
 .nav-btn {
   flex: 1;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
+  display: flex; 
+  flex-direction: column;
+  align-items: center; 
+  justify-content: center;
   gap: 3px; padding: 8px 4px;
   color: #888888;
   transition: color 0.15s;
@@ -856,12 +858,33 @@ html, body {
   color: #888;
   transition: color 0.3s;
 }
-.gobag-status-label.status-in-progress .gobag-status-dot { background: #ffb347; }
-.gobag-status-label.status-in-progress span:last-child { color: #c47900; }
-.gobag-status-label.status-almost .gobag-status-dot { background: #2ecc71; }
-.gobag-status-label.status-almost span:last-child { color: #1a8a4a; }
-.gobag-status-label.status-ready .gobag-status-dot { background: var(--red); animation: statusPulse 1s ease-in-out infinite; }
-.gobag-status-label.status-ready span:last-child { color: var(--red); font-weight: 900; }
+.gobag-status-label.status-in-progress .gobag-status-dot { 
+  background: #ffb347; 
+}
+
+
+.gobag-status-label.status-in-progress span:last-child { 
+  color: #c47900; 
+}
+.gob
+ag-status-label.status-almost .gobag-status-dot { 
+  background: #2ecc71; 
+}
+
+.gobag-status-label.status-almost span:last-child { 
+  color: #1a8a4a; 
+}
+
+.gobag-status-label.status-ready .gobag-status-dot { 
+  background: var(--red); 
+  animation: statusPulse 1s ease-in-out infinite; 
+}
+
+.gobag-status-label.status-ready span:last-child { 
+  color: var(--red); 
+  font-weight: 900; 
+}
+
 @keyframes statusPulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
